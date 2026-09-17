@@ -1,0 +1,4 @@
+id,name,role,is_real_person,portrait,portrait_alt,start_node
+merchant,Mr. Hale,A shopkeeper who sells imported cloth and tea,no,,,merchant_intro
+committee,Mrs. Porter,A member of the town's committee of inspection,no,,,committee_intro
+farmer,Mr. Bray,A farmer who owes money at Mr. Hale's shop,no,,,farmer_intro

@@ -22,7 +22,7 @@ export function ContentText({ value, label, as: Tag = 'p', className, id }: Prop
     )
   }
   return (
-    <Tag id={id} className={className}>
+    <Tag id={id} className={`content-text ${className ?? ''}`}>
       {value}
     </Tag>
   )

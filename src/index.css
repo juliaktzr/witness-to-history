@@ -100,6 +100,11 @@ textarea {
 
 /* ---------- Text ---------- */
 
+/* Authors may put a blank line between paragraphs inside one cell. Keep it. */
+.content-text {
+  white-space: pre-line;
+}
+
 .lead {
   font-size: 1.15rem;
 }

@@ -1,0 +1,4 @@
+id,title,text,sources
+outcome_strict,The town holds,"Your committee publishes two names that winter. Both shops lose customers, and one closes. Imports into the colonies fall sharply through 1775. Your town is counted among those that held firm, and some neighbors no longer speak to one another.","src_association, src_imports"
+outcome_middle,A line that bends,"Mr. Hale sells his old stock and orders nothing new. Some townspeople call it sensible. Others say a rule with exceptions is not a rule, and ask who decides which goods are old.",src_association
+outcome_refuse,Standing apart,"Word travels that your town will not enforce the agreement. Under Article 14, colonies and towns that broke the Association risked being cut off from trade with everyone else. Merchants in neighboring towns grow reluctant to deal with yours.",src_association

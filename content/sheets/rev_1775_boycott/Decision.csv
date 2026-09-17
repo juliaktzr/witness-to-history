@@ -1,0 +1,2 @@
+id,prompt,context,option_1_text,option_1_outcome,option_2_text,option_2_outcome,option_3_text,option_3_outcome
+decision,The town meeting is tonight. What do you vote for?,"You do not know whether Britain will repeal the laws, ignore the colonies, or send soldiers. You do know that your neighbors will remember how you voted.","Enforce the agreement strictly, and publish the names of anyone who breaks it",outcome_strict,"Let merchants sell goods they bought before December, but nothing new",outcome_middle,Refuse to enforce the agreement in this town,outcome_refuse

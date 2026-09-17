@@ -415,7 +415,7 @@ function main() {
   const args = process.argv.slice(2)
   const outFlag = args.indexOf('--out')
   const outArg = outFlag >= 0 ? args[outFlag + 1] : undefined
-  const folder = args.find((a, i) => !a.startsWith('--') && i !== outFlag + 1)
+  const folder = args.find((a, i) => !a.startsWith('--') && (outFlag < 0 || i !== outFlag + 1))
   if (!folder) {
     console.log('Usage: npm run convert -- <folder-of-csvs> [--out content/scenarios/<id>.json]')
     process.exit(2)
