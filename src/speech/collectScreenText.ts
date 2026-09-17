@@ -4,7 +4,7 @@
  * looks at the rendered Frame, not at scenario data.
  */
 export function collectScreenText(root: ParentNode = document): string[] {
-  const frame = root instanceof Element && root.matches('.source-panel') ? root : root.querySelector('main.frame')
+  const frame = root instanceof Element && root.matches('dialog') ? root : root.querySelector('main.frame')
   if (!frame) return []
 
   const parts: string[] = []

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import { AppHeader } from './components/AppHeader'
+import { ConfirmDialog } from './components/ConfirmDialog'
 import { SourcePanel } from './components/SourcePanel'
 import { SourceViewerContext } from './components/SourceViewerContext'
 import { WarningBanner } from './components/WarningBanner'
@@ -22,6 +23,7 @@ export default function App() {
   const { scenario, screen } = state
   const readAloud = useReadAloud()
   const [openSourceId, setOpenSourceId] = useState<string | null>(null)
+  const [confirmHome, setConfirmHome] = useState(false)
   const openSource = openSourceId ? scenario?.sources[openSourceId] : undefined
 
   // Read the new screen whenever it changes (or when the toggle turns on).
@@ -33,12 +35,12 @@ export default function App() {
     else stop()
   }, [enabled, screenKey, speak, stop])
 
-  // Read a source record when its panel opens; go back to silence when it closes.
+  // Read a dialog (source record or question) when it opens; go back to silence when it closes.
   useEffect(() => {
     if (!enabled) return
-    if (openSourceId) speak(collectScreenText(document.querySelector('.source-panel') ?? undefined))
+    if (openSourceId || confirmHome) speak(collectScreenText(document.querySelector('dialog[open]') ?? undefined))
     else stop()
-  }, [enabled, openSourceId, speak, stop])
+  }, [enabled, openSourceId, confirmHome, speak, stop])
 
   // Leaving the scenario closes any open panel.
   useEffect(() => {
@@ -115,7 +117,21 @@ export default function App() {
 
   return (
     <SourceViewerContext.Provider value={setOpenSourceId}>
-      <AppHeader readAloud={readAloud} />
+      <AppHeader readAloud={readAloud} onHome={scenario ? () => setConfirmHome(true) : undefined} />
+      <ConfirmDialog
+        open={confirmHome}
+        title="Leave this era?"
+        confirmLabel="Go home"
+        cancelLabel="Stay"
+        onCancel={() => setConfirmHome(false)}
+        onConfirm={() => {
+          setConfirmHome(false)
+          setOpenSourceId(null)
+          dispatch({ type: 'quit' })
+        }}
+      >
+        <p>You will go back to the era menu. Your progress in this era is not saved.</p>
+      </ConfirmDialog>
       <WarningBanner warnings={warnings} />
       {body}
       <SourcePanel sourceId={openSourceId} source={openSource} onClose={() => setOpenSourceId(null)} />

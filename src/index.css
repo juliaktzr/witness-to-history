@@ -489,6 +489,12 @@ textarea {
   font-family: system-ui, sans-serif;
 }
 
+.app-header-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
 .app-header-title {
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -705,6 +711,14 @@ textarea {
     font-size: 0.7rem;
     padding: 0.2rem 0.5rem;
   }
+}
+
+.confirm-dialog {
+  width: min(100% - 2rem, 28rem);
+}
+
+.confirm-body p {
+  margin: 0;
 }
 
 /* ---------- Briefing image marker ---------- */
