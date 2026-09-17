@@ -1,3 +1,4 @@
+import type React from 'react'
 import { ContentImage } from '../components/ContentImage'
 import { ContentText } from '../components/ContentText'
 import { Frame } from '../components/Frame'
@@ -41,10 +42,10 @@ export function FigureHub({ scenario, visited, onOpenFigure, onDecide }: Props) 
         </>
       )}
       <ul className="card-list">
-        {scenario.figures.map((f) => {
+        {scenario.figures.map((f, i) => {
           const done = visited.includes(f.id)
           return (
-            <li key={f.id} className="card card-row">
+            <li key={f.id} className="card card-row stagger" style={{ '--i': i } as React.CSSProperties}>
               <ContentImage image={f.portrait} label={`portrait of ${f.name}`} className="portrait" />
               <div className="card-body">
                 <h2 className="card-title">

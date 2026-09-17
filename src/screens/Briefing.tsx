@@ -43,7 +43,12 @@ export function Briefing({ scenario, index, onNext, onBack }: Props) {
       ) : (
         <ContentImage image={screen.image} label="briefing picture" className="hero-image" />
       )}
-      <ContentText value={screen.text} label="briefing text" className="lead" />
+      <ol className="progress-dots" aria-hidden="true">
+        {scenario.briefing.map((b, i) => (
+          <li key={b.id} className={i === index ? 'is-current' : i < index ? 'is-done' : ''} />
+        ))}
+      </ol>
+      <ContentText value={screen.text} label="briefing text" className="lead drop-cap" />
       <SourceList ids={screen.sources} scenario={scenario} />
     </Frame>
   )

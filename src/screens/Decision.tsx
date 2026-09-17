@@ -1,3 +1,4 @@
+import type React from 'react'
 import { ChoiceButton } from '../components/ChoiceButton'
 import { ContentText } from '../components/ContentText'
 import { Frame } from '../components/Frame'
@@ -28,7 +29,7 @@ export function Decision({ scenario, onDecide, onBack }: Props) {
       <h2 className="section-heading">Pick one</h2>
       <ul className="choice-list">
         {decision.options.map((o, i) => (
-          <li key={i}>
+          <li key={i} className="stagger" style={{ '--i': i } as React.CSSProperties}>
             <ChoiceButton text={o.text} label={`option ${i + 1}`} onClick={() => onDecide(o.outcome)} />
           </li>
         ))}

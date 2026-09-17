@@ -1,3 +1,4 @@
+import type React from 'react'
 import { ChoiceButton } from '../components/ChoiceButton'
 import { ContentImage } from '../components/ContentImage'
 import { ContentText } from '../components/ContentText'
@@ -49,7 +50,7 @@ export function Dialogue({ scenario, figureId, nodeId, onChoice, onLeave }: Prop
           <h2 className="section-heading">What do you say?</h2>
           <ul className="choice-list">
             {node.choices.map((c, i) => (
-              <li key={i}>
+              <li key={i} className="stagger" style={{ '--i': i } as React.CSSProperties}>
                 <ChoiceButton text={c.text} label={`choice ${i + 1}`} onClick={() => onChoice(c.next)} />
               </li>
             ))}

@@ -138,17 +138,24 @@ function useNudgedPins(deps: unknown[]) {
       boxes.sort((a, b) => a.l - b.l)
       const next: Record<string, number> = {}
       for (let i = 0; i < boxes.length; i++) {
+        const b = boxes[i]
         let shift = 0
+        let leftShift = 0
         for (let j = 0; j < i; j++) {
           const a = boxes[j]
-          const b = boxes[i]
           const vertical = a.t < b.b && b.t < a.b
+          if (!vertical) continue
+          const aLeft = a.l + (next[a.id] ?? 0)
           const aRight = a.r + (next[a.id] ?? 0)
-          const bLeft = b.l + shift
-          if (vertical && bLeft < aRight + 6) shift = aRight + 6 - b.l
+          if (b.l + shift < aRight + 6 && b.r + shift > aLeft - 6) {
+            shift = aRight + 6 - b.l
+            leftShift = Math.min(leftShift, aLeft - 6 - b.r)
+          }
         }
-        const maxShift = host.right - 4 - boxes[i].r
-        next[boxes[i].id] = Math.min(shift, Math.max(0, maxShift))
+        const maxRight = host.right - 4 - b.r
+        const maxLeft = host.left + 4 - b.l // negative or zero
+        // Prefer moving right; if there is no room, move left instead.
+        next[b.id] = shift <= maxRight ? shift : leftShift >= maxLeft ? leftShift : Math.max(0, maxRight)
       }
       setDx((cur) => (JSON.stringify(cur) === JSON.stringify(next) ? cur : next))
     }
@@ -217,7 +224,7 @@ export function TownMap({ map, figures, visited, onOpenFigure }: Props) {
         </span>
       ))}
 
-      {places.map((p) =>
+      {places.map((p, placeIndex) =>
         (byPlace.get(p.id) ?? []).map((f, i) => {
           const done = visited.includes(f.id)
           const placeName = isPlaceholder(p.label) ? 'a place with no name yet' : p.label
@@ -232,6 +239,7 @@ export function TownMap({ map, figures, visited, onOpenFigure }: Props) {
                 left: `clamp(3rem, ${p.x + i * 9}%, calc(100% - 3rem))`,
                 top: `max(${p.y - 19}%, 2.7rem)`,
                 translate: `${dx[f.id] ?? 0}px 0`,
+                ['--i' as string]: placeIndex + i,
               }}
               aria-label={`Talk to ${f.name} at ${placeName}${done ? ' (already talked)' : ''}`}
               onClick={() => onOpenFigure(f.id)}

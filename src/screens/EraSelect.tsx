@@ -1,3 +1,4 @@
+import type React from 'react'
 import { ContentImage } from '../components/ContentImage'
 import { ContentText } from '../components/ContentText'
 import { Frame } from '../components/Frame'
@@ -16,9 +17,9 @@ export function EraSelect({ scenarios, onChoose }: Props) {
         <p className="placeholder">No scenarios found in content/scenarios.</p>
       )}
       <ul className="card-list">
-        {scenarios.map(({ file, scenario, validation }) =>
+        {scenarios.map(({ file, scenario, validation }, i) =>
           scenario ? (
-            <li key={file} className="card">
+            <li key={file} className="card stagger" style={{ '--i': i } as React.CSSProperties}>
               <ContentImage image={scenario.coverImage} label="cover" className="card-image" />
               <div className="card-body">
                 <p className="kicker">

@@ -21,7 +21,7 @@ export function Outcome({ scenario, outcomeId, onNext }: Props) {
         </button>
       }
     >
-      <ContentText value={outcome?.text} label="outcome text" className="lead" />
+      <ContentText value={outcome?.text} label="outcome text" className="lead drop-cap" />
       {outcome && <SourceList ids={outcome.sources} scenario={scenario} />}
     </Frame>
   )

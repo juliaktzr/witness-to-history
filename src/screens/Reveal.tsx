@@ -19,7 +19,7 @@ export function Reveal({ scenario, onNext }: Props) {
         </button>
       }
     >
-      <ContentText value={scenario.reveal.text} label="historical reveal" className="lead" />
+      <ContentText value={scenario.reveal.text} label="historical reveal" className="lead drop-cap" />
       <SourceList ids={scenario.reveal.sources} scenario={scenario} />
     </Frame>
   )
