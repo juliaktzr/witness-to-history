@@ -58,6 +58,21 @@ problem is printed with the tab, row, and column to fix, for example:
 It writes `content/scenarios/<id>.json` only when there are no errors. Warnings
 about unfinished `TODO` cells are listed but do not block the file.
 
+## Maps
+
+Two optional, content-driven map features:
+
+- **Town map hub.** If a scenario has a `map` block (from the optional Places
+  tab), the "who do you want to talk to" screen draws a simple illustrated town
+  map in SVG and places each figure at their spot. Pins are real buttons named
+  like "Talk to Mr. Hale at Mr. Hale's shop", and the plain list of people stays
+  below the map, so keyboard and screen reader users lose nothing. The
+  drawings are generic on purpose: the game never depicts a specific real town.
+- **"You are here" on a briefing image.** Any briefing screen with an image can
+  carry a marker (percent coordinates plus a label). The boycott scenario uses
+  it on a public domain 1774 map of New England from the Library of Congress,
+  loaded straight from their image service, with the record cited as a source.
+
 ## Read aloud
 
 The header has one "Read aloud" toggle. When it is on, the game reads each new

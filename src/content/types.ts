@@ -5,11 +5,19 @@ export interface ImageRef {
   alt: string
 }
 
+/** A "you are here" pin drawn over a briefing image. x and y are percent of the image. */
+export interface ImageMarker {
+  x: number
+  y: number
+  label: string
+}
+
 export interface BriefingScreen {
   id: string
   heading: string
   text: string
   image?: ImageRef
+  marker?: ImageMarker
   sources: string[]
 }
 
@@ -20,6 +28,8 @@ export interface Figure {
   isRealPerson: boolean
   portrait?: ImageRef
   startNode: string
+  /** ID of the place on the town map where this figure stands. */
+  place?: string
 }
 
 export interface DialogueChoice {
@@ -78,6 +88,32 @@ export interface Source {
   excerpt?: string
 }
 
+export type PlaceKind =
+  | 'meeting_house'
+  | 'shop'
+  | 'farm'
+  | 'house'
+  | 'church'
+  | 'tavern'
+  | 'dock'
+  | 'field'
+  | 'other'
+
+/** One building or spot on the illustrated town map. x and y are percent of the map. */
+export interface MapPlace {
+  id: string
+  label: string
+  kind: PlaceKind
+  x: number
+  y: number
+}
+
+export interface ScenarioMap {
+  places: MapPlace[]
+  /** Place ID where the student is standing. */
+  here?: string
+}
+
 export interface Scenario {
   id: string
   title: string
@@ -89,6 +125,8 @@ export interface Scenario {
   briefing: BriefingScreen[]
   figures: Figure[]
   dialogue: Record<string, DialogueNode>
+  /** Optional. When present the figure hub is drawn as a town map. */
+  map?: ScenarioMap
   decision: Decision
   outcomes: Record<string, Outcome>
   reveal: Reveal

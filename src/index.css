@@ -596,3 +596,136 @@ textarea {
     margin-bottom: 0.5rem;
   }
 }
+
+/* ---------- Town map ---------- */
+
+.town-map {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 100 / 62;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #a9bd7c;
+}
+
+.town-map-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.place-label {
+  position: absolute;
+  transform: translate(-50%, 0);
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(251, 247, 239, 0.9);
+  color: var(--ink);
+  font-family: system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.place-here {
+  color: var(--focus);
+}
+
+.pin {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  min-height: 2.4rem;
+  padding: 0.3rem 0.7rem;
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.pin:hover {
+  background: #5c2109;
+}
+
+.pin-done {
+  background: var(--surface);
+  color: var(--accent);
+}
+
+.pin-tail {
+  position: absolute;
+  left: 50%;
+  bottom: -0.55rem;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-left: 0.45rem solid transparent;
+  border-right: 0.45rem solid transparent;
+  border-top: 0.6rem solid var(--accent);
+}
+
+.pin:focus-visible {
+  outline: 4px solid var(--focus);
+  outline-offset: 3px;
+}
+
+@media (max-width: 30rem) {
+  .place-label {
+    font-size: 0.6rem;
+  }
+
+  .pin {
+    min-height: 2.2rem;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+}
+
+/* ---------- Briefing image marker ---------- */
+
+.marked-image {
+  position: relative;
+  margin: 0;
+}
+
+.image-marker {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+.image-marker-pin {
+  display: block;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--focus);
+  border: 3px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.image-marker-caption {
+  margin-top: 0.4rem;
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.image-marker-dot {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--focus);
+  vertical-align: middle;
+}

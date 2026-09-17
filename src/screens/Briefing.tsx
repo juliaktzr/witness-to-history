@@ -2,7 +2,7 @@ import { ContentImage } from '../components/ContentImage'
 import { ContentText } from '../components/ContentText'
 import { Frame } from '../components/Frame'
 import { SourceList } from '../components/SourceList'
-import type { Scenario } from '../content/types'
+import { isPlaceholder, type Scenario } from '../content/types'
 
 interface Props {
   scenario: Scenario
@@ -30,7 +30,19 @@ export function Briefing({ scenario, index, onNext, onBack }: Props) {
         </>
       }
     >
-      <ContentImage image={screen.image} label="briefing picture" className="hero-image" />
+      {screen.marker && screen.image ? (
+        <figure className="marked-image">
+          <ContentImage image={screen.image} label="briefing picture" className="hero-image" />
+          <span className="image-marker" style={{ left: `${screen.marker.x}%`, top: `${screen.marker.y}%` }} aria-hidden="true">
+            <span className="image-marker-pin" />
+          </span>
+          <figcaption className="image-marker-caption">
+            <span className="image-marker-dot" aria-hidden="true" /> {isPlaceholder(screen.marker.label) ? 'Marker label coming soon' : screen.marker.label}
+          </figcaption>
+        </figure>
+      ) : (
+        <ContentImage image={screen.image} label="briefing picture" className="hero-image" />
+      )}
       <ContentText value={screen.text} label="briefing text" className="lead" />
       <SourceList ids={screen.sources} scenario={scenario} />
     </Frame>

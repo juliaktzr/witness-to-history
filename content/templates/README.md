@@ -1,13 +1,15 @@
 # Content templates
 
-Eight CSV files, one per tab of the content sheet. Each has only a header row.
-Column meanings are in `CONTENT_SCHEMA.md` at the top of the repo.
+Nine CSV files, one per tab of the content sheet. Each has only a header row.
+Column meanings are in `CONTENT_SCHEMA.md` at the top of the repo. The
+**Places** tab is optional: leave it out and the game shows the people as a
+plain list instead of a town map.
 
 ## Setting up the Google Sheet
 
 1. Make a new Google Sheet. Rename the first tab **Scenario**.
 2. Add tabs named exactly: **Briefing**, **Figures**, **Dialogue**, **Decision**,
-   **Outcomes**, **Reveal and Reflection**, **Sources**.
+   **Outcomes**, **Reveal and Reflection**, **Sources**, and optionally **Places**.
 3. For each tab: File > Import > Upload the matching CSV here > Import location
    "Replace current sheet". That fills in the header row.
 4. Write content in the rows below the headers. Write `TODO` in any cell you
@@ -19,7 +21,7 @@ Column meanings are in `CONTENT_SCHEMA.md` at the top of the repo.
 Google Sheets downloads one tab at a time:
 
 1. Click the tab, then File > Download > Comma Separated Values (.csv).
-2. Repeat for all eight tabs. Put the eight files in one folder.
+2. Repeat for every tab. Put the files in one folder.
 3. Send the folder (or a zip of it). File names like
    `Witness Content - Dialogue.csv` are fine.
 
@@ -35,3 +37,7 @@ sheet without touching code.
 - `is_real_person`: `yes` or `no`. Source `type`: document, image, map,
   letter, newspaper, or secondary.
 - Every image needs an alt text cell filled in.
+- Map positions (`x`, `y`, `marker_x`, `marker_y`) are percentages across the
+  picture: 0 is the left or top edge, 100 is the right or bottom edge.
+- Place `kind`: meeting_house, shop, farm, house, church, tavern, dock, field,
+  or other. It only changes the little drawing.

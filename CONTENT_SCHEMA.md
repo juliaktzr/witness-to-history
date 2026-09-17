@@ -33,6 +33,8 @@ Peabody students write content in a shared Google Sheet with the tabs below. The
 | text | What the student reads |
 | image | Public domain image link (optional) |
 | image_alt | Description of the image for accessibility |
+| marker_x, marker_y | Optional. Put a "you are here" pin on the image. Percent across (x) and down (y) the picture, 0 to 100 |
+| marker_label | Optional. Text under the pin, e.g. "Your town is somewhere near here" |
 | sources | Source IDs, comma separated |
 
 ### 3. Figures (one row per person)
@@ -45,6 +47,7 @@ Peabody students write content in a shared Google Sheet with the tabs below. The
 | portrait | Public domain image link |
 | portrait_alt | Image description |
 | start_node | ID of the first dialogue row for this figure |
+| place | Optional. ID of a row in the Places tab, where this person stands on the town map |
 
 ### 4. Dialogue (one row per thing a figure says)
 | Column | What to write |
@@ -88,6 +91,17 @@ A row with no choices ends the conversation and returns the student to the figur
 | text | What actually happened (reveal), or the question (reflection) |
 | sources | Source IDs (reveal only) |
 
+### 9. Places (optional, one row per spot on the town map)
+When this tab exists, the "talk to figures" hub draws a simple illustrated town map and puts each figure at their place. Leave the tab out to show a plain list.
+| Column | What to write |
+|---|---|
+| id | `meeting_house`, `shop` ... |
+| label | Name shown on the map, e.g. Mr. Hale's shop |
+| kind | Which little drawing to use: `meeting_house`, `shop`, `farm`, `house`, `church`, `tavern`, `dock`, `field`, `other` |
+| x | Left-to-right position, 0 to 100 |
+| y | Top-to-bottom position, 0 to 100 |
+| you_are_here | `yes` on the one place where the student is standing |
+
 ### 8. Sources (one row per primary or secondary source)
 | Column | What to write |
 |---|---|
@@ -113,12 +127,19 @@ The converter (`npm run convert -- <folder-of-csvs>`, see `content/templates/REA
   "coverImage": { "src": "string", "alt": "string" },
   "briefing": [
     { "id": "string", "heading": "string", "text": "string",
-      "image": { "src": "string", "alt": "string" }, "sources": ["srcId"] }
+      "image": { "src": "string", "alt": "string" },
+      "marker": { "x": 50, "y": 40, "label": "string" },
+      "sources": ["srcId"] }
   ],
   "figures": [
     { "id": "string", "name": "string", "role": "string", "isRealPerson": false,
-      "portrait": { "src": "string", "alt": "string" }, "startNode": "dialogueId" }
+      "portrait": { "src": "string", "alt": "string" }, "startNode": "dialogueId",
+      "place": "placeId" }
   ],
+  "map": {
+    "places": [ { "id": "string", "label": "string", "kind": "shop", "x": 50, "y": 40 } ],
+    "here": "placeId"
+  },
   "dialogue": {
     "dialogueId": {
       "figure": "figureId", "text": "string", "sources": ["srcId"],
@@ -146,3 +167,4 @@ The converter (`npm run convert -- <folder-of-csvs>`, see `content/templates/REA
 - Every dialogue node is reachable from some figure's `startNode`
 - No text field is empty; `TODO` values are flagged in a visible warning banner
 - Every image has alt text
+- Every figure `place` and the map's `here` point to a row in Places; positions are 0 to 100

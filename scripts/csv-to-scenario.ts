@@ -20,7 +20,9 @@ import type {
   DialogueChoice,
   DialogueNode,
   Figure,
+  MapPlace,
   Outcome,
+  PlaceKind,
   Scenario,
   Source,
   SourceType,
@@ -76,7 +78,7 @@ function parseCsv(text: string): string[][] {
 // Sheet model
 // ---------------------------------------------------------------------------
 
-type TabKey = 'scenario' | 'briefing' | 'figures' | 'dialogue' | 'decision' | 'outcomes' | 'reveal' | 'sources'
+type TabKey = 'scenario' | 'briefing' | 'figures' | 'dialogue' | 'decision' | 'outcomes' | 'reveal' | 'sources' | 'places'
 
 const TAB_NAMES: Record<TabKey, string> = {
   scenario: 'Scenario',
@@ -87,7 +89,11 @@ const TAB_NAMES: Record<TabKey, string> = {
   outcomes: 'Outcomes',
   reveal: 'Reveal and Reflection',
   sources: 'Sources',
+  places: 'Places',
 }
+
+/** Tabs a scenario can leave out entirely. */
+const OPTIONAL_TABS: TabKey[] = ['places']
 
 const REQUIRED_COLUMNS: Record<TabKey, string[]> = {
   scenario: ['id', 'title', 'era', 'year', 'location', 'summary'],
@@ -98,6 +104,7 @@ const REQUIRED_COLUMNS: Record<TabKey, string[]> = {
   outcomes: ['id', 'title', 'text'],
   reveal: ['type', 'id', 'text'],
   sources: ['id', 'title', 'creator', 'date', 'type', 'url'],
+  places: ['id', 'label', 'kind', 'x', 'y'],
 }
 
 interface Row {
@@ -112,6 +119,8 @@ interface Tab {
   file: string
   columns: string[]
   rows: Row[]
+  /** True when no CSV was supplied for this tab. */
+  absent?: boolean
 }
 
 interface Problem {
@@ -148,9 +157,11 @@ function findTabFile(folder: string, files: string[], key: TabKey): string | nul
 function loadTab(folder: string, files: string[], key: TabKey): Tab {
   const name = TAB_NAMES[key]
   const file = findTabFile(folder, files, key)
-  const empty: Tab = { key, name, file: '', columns: REQUIRED_COLUMNS[key], rows: [] }
+  const empty: Tab = { key, name, file: '', columns: REQUIRED_COLUMNS[key], rows: [], absent: true }
   if (!file) {
-    errors.push({ tab: name, message: `No CSV file found for the "${name}" tab. Download that tab as CSV into the folder.` })
+    if (!OPTIONAL_TABS.includes(key)) {
+      errors.push({ tab: name, message: `No CSV file found for the "${name}" tab. Download that tab as CSV into the folder.` })
+    }
     return empty
   }
   const grid = parseCsv(readFileSync(file, 'utf8'))
@@ -202,6 +213,17 @@ function yesNo(tab: Tab, row: Row, column: string): boolean {
   return false
 }
 
+function numberCell(tab: Tab, row: Row, column: string): number | undefined {
+  const v = row.cells[column]
+  if (v === undefined || v === '') return undefined
+  const n = Number(v)
+  if (!Number.isFinite(n)) {
+    errors.push({ tab: tab.name, row: row.n, column, id: row.cells.id, message: `Must be a number, not "${v}".` })
+    return undefined
+  }
+  return n
+}
+
 /** Records where each ID lives so validator messages can point at a row. */
 const rowIndex: Record<string, Map<string, number>> = {}
 function indexIds(tab: Tab) {
@@ -229,7 +251,7 @@ function indexIds(tab: Tab) {
 // ---------------------------------------------------------------------------
 
 function build(t: Record<TabKey, Tab>): Scenario {
-  for (const key of ['briefing', 'figures', 'dialogue', 'outcomes', 'sources'] as const) indexIds(t[key])
+  for (const key of ['briefing', 'figures', 'dialogue', 'outcomes', 'sources', 'places'] as const) if (!t[key].absent) indexIds(t[key])
 
   // Scenario (one row)
   if (t.scenario.rows.length === 0) {
@@ -257,6 +279,11 @@ function build(t: Record<TabKey, Tab>): Scenario {
     const b: BriefingScreen = { id: r.cells.id, heading: r.cells.heading ?? '', text: r.cells.text ?? '', sources: splitIds(r.cells.sources) }
     const img = imageOrUndefined(r.cells.image, r.cells.image_alt)
     if (img) b.image = img
+    const mx = numberCell(t.briefing, r, 'marker_x')
+    const my = numberCell(t.briefing, r, 'marker_y')
+    if (mx !== undefined || my !== undefined || (r.cells.marker_label ?? '') !== '') {
+      b.marker = { x: mx ?? -1, y: my ?? -1, label: r.cells.marker_label ?? '' }
+    }
     return b
   })
 
@@ -271,8 +298,27 @@ function build(t: Record<TabKey, Tab>): Scenario {
     }
     const img = imageOrUndefined(r.cells.portrait, r.cells.portrait_alt)
     if (img) f.portrait = img
+    if ((r.cells.place ?? '') !== '') f.place = r.cells.place
     return f
   })
+
+  // Places (optional tab) -> town map
+  let map: Scenario['map']
+  if (!t.places.absent) {
+    const places: MapPlace[] = t.places.rows
+      .filter((r) => r.cells.id)
+      .map((r) => ({
+        id: r.cells.id,
+        label: r.cells.label ?? '',
+        kind: ((r.cells.kind ?? '').toLowerCase() || 'other') as PlaceKind,
+        x: numberCell(t.places, r, 'x') ?? -1,
+        y: numberCell(t.places, r, 'y') ?? -1,
+      }))
+    const hereRows = t.places.rows.filter((r) => ['yes', 'y', 'true', '1'].includes((r.cells.you_are_here ?? '').toLowerCase()))
+    if (hereRows.length > 1) warnings.push({ tab: 'Places', row: hereRows[1].n, column: 'you_are_here', message: 'Only one place can be "you are here". The first is used.' })
+    map = { places }
+    if (hereRows[0]) map.here = hereRows[0].cells.id
+  }
 
   // Dialogue: any number of choice_N_text / choice_N_next column pairs
   const choiceNumbers = [...new Set(t.dialogue.columns.map((c) => c.match(/^choice_(\d+)_(text|next)$/)?.[1]).filter(Boolean))]
@@ -349,6 +395,7 @@ function build(t: Record<TabKey, Tab>): Scenario {
     briefing,
     figures,
     dialogue,
+    ...(map ? { map } : {}),
     decision: { prompt: d?.cells.prompt ?? '', context: d?.cells.context ?? '', options },
     outcomes,
     reveal: { text: revealRow?.cells.text ?? '', sources: splitIds(revealRow?.cells.sources) },
@@ -376,6 +423,10 @@ const COLUMN_NAMES: Record<string, string> = {
   isRealPerson: 'is_real_person',
   startNode: 'start_node',
   prompt: 'text',
+  'marker.x': 'marker_x',
+  'marker.y': 'marker_y',
+  'marker.label': 'marker_label',
+  marker: 'marker_x',
 }
 
 function locate(issue: ValidationIssue): Problem {
@@ -389,6 +440,9 @@ function locate(issue: ValidationIssue): Problem {
   if (path === 'briefing') return { tab: 'Briefing', message }
   if ((m = path.match(/^figures\[(.+?)\]\.(.+)$/))) return { tab: 'Figures', row: rowIndex.figures?.get(m[1]), id: m[1], column: col(m[2]), message }
   if (path === 'figures') return { tab: 'Figures', message }
+  if ((m = path.match(/^places\[(.+?)\]\.(.+)$/))) return { tab: 'Places', row: rowIndex.places?.get(m[1]), id: m[1], column: m[2], message }
+  if (path === 'map.here') return { tab: 'Places', column: 'you_are_here', message }
+  if (path === 'map') return { tab: 'Places', message }
   if ((m = path.match(/^dialogue\.(.+?)\.(.+)$/))) return { tab: 'Dialogue', row: rowIndex.dialogue?.get(m[1]), id: m[1], column: m[2] === 'choices' ? undefined : m[2], message }
   if ((m = path.match(/^dialogue\.(.+)$/))) return { tab: 'Dialogue', row: rowIndex.dialogue?.get(m[1]), id: m[1], message }
   if ((m = path.match(/^decision\.(.+)$/))) return { tab: 'Decision', row: rowIndex.decision?.get('*'), column: m[1] === 'options' ? undefined : m[1], message }

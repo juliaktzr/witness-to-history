@@ -87,6 +87,10 @@ export function validateScenario(raw: unknown): ValidationResult {
   for (const key of requiredStrings) checkText(key, s[key])
   checkImage('coverImage', s.coverImage, false)
 
+  const checkPercent = (path: string, v: unknown) => {
+    if (typeof v !== 'number' || !Number.isFinite(v) || v < 0 || v > 100) err(path, 'Must be a number from 0 to 100 (percent across the picture).')
+  }
+
   // --- Briefing
   if (s.briefing.length === 0) err('briefing', 'Add at least one briefing screen.')
   s.briefing.forEach((b, i) => {
@@ -95,7 +99,39 @@ export function validateScenario(raw: unknown): ValidationResult {
     checkText(`${p}.text`, b.text)
     checkImage(`${p}.image`, b.image, false)
     checkSources(`${p}.sources`, b.sources)
+    if (b.marker != null) {
+      if (!isObject(b.marker)) {
+        err(`${p}.marker`, 'Marker must have x, y and a label.')
+      } else {
+        if (!b.image) err(`${p}.marker`, 'A marker needs an image to sit on.')
+        checkPercent(`${p}.marker.x`, b.marker.x)
+        checkPercent(`${p}.marker.y`, b.marker.y)
+        checkText(`${p}.marker.label`, b.marker.label)
+      }
+    }
   })
+
+  // --- Map (optional)
+  const placeIds = new Set<string>()
+  if (s.map != null) {
+    if (!isObject(s.map) || !Array.isArray(s.map.places)) {
+      err('map', 'Map must have a list of places.')
+    } else {
+      const kinds = ['meeting_house', 'shop', 'farm', 'house', 'church', 'tavern', 'dock', 'field', 'other']
+      s.map.places.forEach((pl, i) => {
+        const p = `places[${pl?.id ?? i}]`
+        if (typeof pl.id !== 'string' || pl.id === '') err(`${p}.id`, 'Place needs an ID.')
+        else if (placeIds.has(pl.id)) err(`${p}.id`, `Place ID "${pl.id}" is used twice.`)
+        else placeIds.add(pl.id)
+        checkText(`${p}.label`, pl.label)
+        if (!kinds.includes(pl.kind)) err(`${p}.kind`, `"${pl.kind}" is not a place kind. Use one of: ${kinds.join(', ')}.`)
+        checkPercent(`${p}.x`, pl.x)
+        checkPercent(`${p}.y`, pl.y)
+      })
+      if (s.map.places.length === 0) warn('map', 'The map has no places yet, so the hub shows the plain list.')
+      if (s.map.here != null && !placeIds.has(s.map.here)) err('map.here', `"${s.map.here}" is not a place ID.`)
+    }
+  }
 
   // --- Figures
   if (s.figures.length === 0) err('figures', 'Add at least one figure.')
@@ -108,6 +144,10 @@ export function validateScenario(raw: unknown): ValidationResult {
     checkImage(`${p}.portrait`, f.portrait, false)
     if (!dialogueIds.has(f.startNode)) {
       err(`${p}.startNode`, `Start node "${f.startNode}" is not in the Dialogue tab.`)
+    }
+    if (f.place != null && f.place !== '') {
+      if (!s.map) err(`${p}.place`, 'This figure has a place, but the scenario has no Places tab.')
+      else if (!placeIds.has(f.place)) err(`${p}.place`, `Place "${f.place}" is not in the Places tab.`)
     }
   })
 

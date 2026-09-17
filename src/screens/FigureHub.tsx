@@ -1,6 +1,8 @@
 import { ContentImage } from '../components/ContentImage'
 import { ContentText } from '../components/ContentText'
 import { Frame } from '../components/Frame'
+import { TownMap } from '../components/TownMap'
+import { isPlaceholder } from '../content/types'
 import type { Scenario } from '../content/types'
 
 interface Props {
@@ -12,6 +14,9 @@ interface Props {
 
 export function FigureHub({ scenario, visited, onOpenFigure, onDecide }: Props) {
   const allVisited = scenario.figures.every((f) => visited.includes(f.id))
+  const map = scenario.map && scenario.map.places.length > 0 ? scenario.map : undefined
+  const here = map?.places.find((p) => p.id === map.here)
+  const unplaced = map ? scenario.figures.filter((f) => !f.place || !map.places.some((p) => p.id === f.place)) : scenario.figures
   return (
     <Frame
       kicker={`${scenario.location}, ${scenario.year}`}
@@ -23,6 +28,18 @@ export function FigureHub({ scenario, visited, onOpenFigure, onDecide }: Props) 
       }
     >
       <p className="lead">Talk to each person to learn what they know and what worries them.</p>
+      {map && (
+        <>
+          {here && (
+            <p className="muted">
+              You are at {isPlaceholder(here.label) ? 'a place with no name yet' : `the ${here.label.toLowerCase()}`}. Pick a person on the map, or from the list below.
+            </p>
+          )}
+          <TownMap map={map} figures={scenario.figures} visited={visited} onOpenFigure={onOpenFigure} />
+          {unplaced.length > 0 && <p className="fine-print">Not on the map yet: {unplaced.map((f) => f.name).join(', ')}.</p>}
+          <h2 className="section-heading">Everyone in town</h2>
+        </>
+      )}
       <ul className="card-list">
         {scenario.figures.map((f) => {
           const done = visited.includes(f.id)

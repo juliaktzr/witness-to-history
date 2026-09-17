@@ -29,6 +29,24 @@
       "sources": [
         "src_association"
       ]
+    },
+    {
+      "id": "brief_map",
+      "heading": "Where you are",
+      "text": "DRAFT, written by the CS team for review. This map of New England was printed in London in 1774. Your town is one of many small towns in Massachusetts. Boston, the port Parliament closed, is on the coast to the east.",
+      "sources": [
+        "src_map",
+        "src_port_act"
+      ],
+      "image": {
+        "src": "https://tile.loc.gov/image-services/iiif/service:gmd:gmd372:g3720:g3720:ar080000/full/!1400,1400/0/default.jpg",
+        "alt": "A hand-colored 1774 map of New England showing Massachusetts, New Hampshire, Connecticut and Rhode Island, with the Atlantic coast on the right."
+      },
+      "marker": {
+        "x": 42,
+        "y": 53,
+        "label": "Your town is somewhere in Massachusetts"
+      }
     }
   ],
   "figures": [
@@ -37,21 +55,24 @@
       "name": "Mr. Hale",
       "role": "A shopkeeper who sells imported cloth and tea",
       "isRealPerson": false,
-      "startNode": "merchant_intro"
+      "startNode": "merchant_intro",
+      "place": "shop"
     },
     {
       "id": "committee",
       "name": "Mrs. Porter",
       "role": "A member of the town's committee of inspection",
       "isRealPerson": false,
-      "startNode": "committee_intro"
+      "startNode": "committee_intro",
+      "place": "meeting_house"
     },
     {
       "id": "farmer",
       "name": "Mr. Bray",
       "role": "A farmer who owes money at Mr. Hale's shop",
       "isRealPerson": false,
-      "startNode": "farmer_intro"
+      "startNode": "farmer_intro",
+      "place": "farm"
     }
   ],
   "dialogue": {
@@ -185,6 +206,32 @@
       "choices": []
     }
   },
+  "map": {
+    "places": [
+      {
+        "id": "meeting_house",
+        "label": "Meeting house",
+        "kind": "meeting_house",
+        "x": 50,
+        "y": 46
+      },
+      {
+        "id": "shop",
+        "label": "Mr. Hale's shop",
+        "kind": "shop",
+        "x": 22,
+        "y": 62
+      },
+      {
+        "id": "farm",
+        "label": "Mr. Bray's farm",
+        "kind": "farm",
+        "x": 80,
+        "y": 30
+      }
+    ],
+    "here": "meeting_house"
+  },
   "decision": {
     "prompt": "The town meeting is tonight. What do you vote for?",
     "context": "You do not know whether Britain will repeal the laws, ignore the colonies, or send soldiers. You do know that your neighbors will remember how you voted.",
@@ -288,6 +335,14 @@
       "date": "No date given",
       "type": "secondary",
       "url": "https://www.colonialwilliamsburg.org/discover/moments-in-history/the-tea-crisis/the-continental-association/",
+      "excerpt": ""
+    },
+    "src_map": {
+      "title": "A map of the most inhabited part of New England",
+      "creator": "Thomas Jefferys",
+      "date": "1774",
+      "type": "map",
+      "url": "https://www.loc.gov/item/74692159/",
       "excerpt": ""
     }
   },
