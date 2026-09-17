@@ -1,0 +1,455 @@
+/* Witness to History. Plain CSS, no framework. Designed for a 12 year old on a
+   Chromebook or phone: large text, high contrast, big tap targets. */
+
+:root {
+  --bg: #fbf7ef;
+  --surface: #ffffff;
+  --ink: #1d1a14;
+  --muted: #514a3d;
+  --line: #c9bfa9;
+  --accent: #7a2e0e;
+  --accent-ink: #ffffff;
+  --accent-soft: #f3e3d6;
+  --focus: #0b57d0;
+  --warn-bg: #fff3c4;
+  --warn-ink: #4a3b00;
+  --error-bg: #fde2e1;
+  --error-ink: #6b0f0a;
+  --placeholder-bg: #f1ecff;
+  --placeholder-ink: #3b2a80;
+  --radius: 12px;
+  --max-width: 44rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 20px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 4px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Frame ---------- */
+
+.frame {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1rem 1rem 6rem;
+}
+
+.frame-header {
+  margin-bottom: 1rem;
+}
+
+.kicker {
+  margin: 0 0 0.25rem;
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.frame-title {
+  margin: 0;
+  font-size: 1.8rem;
+  line-height: 1.2;
+}
+
+.frame-title:focus {
+  outline: none;
+}
+
+.frame-body > * + * {
+  margin-top: 1rem;
+}
+
+.frame-actions {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border-top: 2px solid var(--line);
+}
+
+@media (min-width: 48rem) {
+  .frame-actions {
+    position: sticky;
+    margin: 2rem -1rem 0;
+    border-radius: var(--radius);
+    border: 2px solid var(--line);
+  }
+}
+
+/* ---------- Text ---------- */
+
+.lead {
+  font-size: 1.15rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.fine-print {
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0.25rem 0 0;
+}
+
+.section-heading {
+  font-size: 1.2rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.placeholder {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border: 2px dashed var(--placeholder-ink);
+  border-radius: 8px;
+  background: var(--placeholder-bg);
+  color: var(--placeholder-ink);
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+p.placeholder,
+h1 .placeholder,
+h2 .placeholder {
+  display: block;
+}
+
+.sources {
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0.5rem 0 0;
+}
+
+.sources a {
+  color: var(--accent);
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-block;
+  min-height: 3rem;
+  padding: 0.6rem 1.2rem;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--accent);
+  font-family: system-ui, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn:hover {
+  background: var(--accent-soft);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn-primary:hover {
+  background: #5c2109;
+}
+
+.btn-choice {
+  width: 100%;
+  text-align: left;
+  font-weight: 500;
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.btn-choice:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.choice-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+/* ---------- Cards ---------- */
+
+.card-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.card-row {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.card-body {
+  padding: 1rem;
+  flex: 1;
+}
+
+.card-row .card-body {
+  padding: 0;
+}
+
+.card-body > * + * {
+  margin-top: 0.5rem;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.card-error {
+  background: var(--error-bg);
+  color: var(--error-ink);
+  border-color: var(--error-ink);
+}
+
+.error-list {
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  padding-left: 1.2rem;
+}
+
+.badge {
+  display: inline-block;
+  font-family: system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0.5rem;
+  margin-left: 0.5rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  vertical-align: middle;
+}
+
+/* ---------- Images ---------- */
+
+.card-image,
+.hero-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.hero-image {
+  border-radius: var(--radius);
+  border: 2px solid var(--line);
+}
+
+.portrait {
+  flex: 0 0 auto;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--line);
+}
+
+.image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(45deg, #ece5d6 0 12px, #e2dac8 12px 24px);
+  color: var(--muted);
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.25rem;
+}
+
+.image-placeholder.portrait {
+  font-size: 0.6rem;
+}
+
+/* ---------- Dialogue ---------- */
+
+.speech {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.speech-bubble {
+  flex: 1;
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.speech-bubble > p {
+  margin: 0;
+}
+
+/* ---------- Decision ---------- */
+
+.callout {
+  background: var(--accent-soft);
+  border-left: 6px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.75rem 1rem;
+}
+
+.callout-label {
+  margin: 0 0 0.25rem;
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.callout p {
+  margin: 0;
+}
+
+/* ---------- Reflection ---------- */
+
+.reflect-block {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.reflect-label {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.reflect-label .kicker {
+  display: block;
+}
+
+textarea {
+  width: 100%;
+  padding: 0.6rem;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  resize: vertical;
+}
+
+/* ---------- Warning banner ---------- */
+
+.warning-banner {
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  border-bottom: 2px solid #d9b400;
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+}
+
+.warning-toggle {
+  width: 100%;
+  min-height: 2.5rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  padding: 0.5rem 1rem;
+}
+
+.warning-list {
+  margin: 0;
+  padding: 0 1rem 0.75rem 2.2rem;
+  max-height: 14rem;
+  overflow: auto;
+}
+
+/* ---------- Motion ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .frame-body {
+    animation: fade-in 200ms ease-out;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Narrow phones: stack portrait above text ---------- */
+
+@media (max-width: 30rem) {
+  .speech,
+  .card-row {
+    flex-direction: column;
+  }
+
+  .portrait {
+    width: 4rem;
+    height: 4rem;
+  }
+}
