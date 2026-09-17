@@ -80,6 +80,11 @@ Two optional, content-driven map features:
   like "Talk to Mr. Hale at Mr. Hale's shop", and the plain list of people stays
   below the map, so keyboard and screen reader users lose nothing. The
   drawings are generic on purpose: the game never depicts a specific real town.
+  The student has a small character on the map (dress it from the Character
+  button in the header; the choice is saved only in the browser). Picking a
+  person walks the character along the road to them, and the conversation
+  opens on arrival. The character starts at the place marked `you_are_here`,
+  which should be a `signpost` at the edge of town.
 - **"You are here" on a briefing image.** Any briefing screen with an image can
   carry a marker (percent coordinates plus a label). The boycott scenario uses
   it on a public domain 1774 map of New England from the Library of Congress,

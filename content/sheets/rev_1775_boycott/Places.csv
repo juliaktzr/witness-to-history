@@ -1,4 +1,5 @@
 id,label,kind,x,y,you_are_here
-meeting_house,Meeting house,meeting_house,50,46,yes
+meeting_house,Meeting house,meeting_house,50,46,
 shop,Mr. Hale's shop,shop,22,62,
 farm,Mr. Bray's farm,farm,80,30,
+edge_of_town,Edge of town,signpost,8,78,yes

@@ -117,7 +117,7 @@ export function validateScenario(raw: unknown): ValidationResult {
     if (!isObject(s.map) || !Array.isArray(s.map.places)) {
       err('map', 'Map must have a list of places.')
     } else {
-      const kinds = ['meeting_house', 'shop', 'farm', 'house', 'church', 'tavern', 'dock', 'field', 'other']
+      const kinds = ['meeting_house', 'shop', 'farm', 'house', 'church', 'tavern', 'dock', 'field', 'signpost', 'other']
       s.map.places.forEach((pl, i) => {
         const p = `places[${pl?.id ?? i}]`
         if (typeof pl.id !== 'string' || pl.id === '') err(`${p}.id`, 'Place needs an ID.')

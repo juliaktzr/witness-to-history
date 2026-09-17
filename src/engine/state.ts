@@ -15,6 +15,8 @@ export interface GameState {
   screen: Screen
   /** Figure IDs the student has finished talking to at least once. */
   visited: string[]
+  /** ID of the map place the student's avatar is currently standing at, if the scenario has a map. */
+  avatarPlace: string | null
 }
 
 export type Action =
@@ -22,6 +24,7 @@ export type Action =
   | { type: 'briefing-next' }
   | { type: 'briefing-back' }
   | { type: 'open-figure'; figureId: string }
+  | { type: 'move-avatar'; placeId: string }
   | { type: 'dialogue-choice'; next: string }
   | { type: 'leave-dialogue' }
   | { type: 'go-to-decision' }
@@ -36,6 +39,7 @@ export const initialState: GameState = {
   scenario: null,
   screen: { kind: 'era-select' },
   visited: [],
+  avatarPlace: null,
 }
 
 function markVisited(visited: string[], figureId: string): string[] {
@@ -46,7 +50,12 @@ export function reducer(state: GameState, action: Action): GameState {
   const { scenario, screen } = state
   switch (action.type) {
     case 'choose-scenario':
-      return { scenario: action.scenario, screen: { kind: 'briefing', index: 0 }, visited: [] }
+      return {
+        scenario: action.scenario,
+        screen: { kind: 'briefing', index: 0 },
+        visited: [],
+        avatarPlace: action.scenario.map?.here ?? null,
+      }
 
     case 'briefing-next': {
       if (!scenario || screen.kind !== 'briefing') return state
@@ -66,6 +75,9 @@ export function reducer(state: GameState, action: Action): GameState {
       if (!figure) return state
       return { ...state, screen: { kind: 'dialogue', figureId: figure.id, nodeId: figure.startNode } }
     }
+
+    case 'move-avatar':
+      return { ...state, avatarPlace: action.placeId }
 
     case 'dialogue-choice': {
       if (screen.kind !== 'dialogue') return state
@@ -99,7 +111,7 @@ export function reducer(state: GameState, action: Action): GameState {
 
     case 'restart':
       if (!scenario) return initialState
-      return { scenario, screen: { kind: 'briefing', index: 0 }, visited: [] }
+      return { scenario, screen: { kind: 'briefing', index: 0 }, visited: [], avatarPlace: scenario.map?.here ?? null }
 
     case 'quit':
       return initialState

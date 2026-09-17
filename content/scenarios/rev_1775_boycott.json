@@ -238,9 +238,16 @@
         "kind": "farm",
         "x": 80,
         "y": 30
+      },
+      {
+        "id": "edge_of_town",
+        "label": "Edge of town",
+        "kind": "signpost",
+        "x": 8,
+        "y": 78
       }
     ],
-    "here": "meeting_house"
+    "here": "edge_of_town"
   },
   "decision": {
     "prompt": "The town meeting is tonight. What do you vote for?",

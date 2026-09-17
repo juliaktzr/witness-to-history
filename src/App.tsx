@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import { AppHeader } from './components/AppHeader'
+import { AvatarPicker } from './components/AvatarPicker'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { SourcePanel } from './components/SourcePanel'
 import { SourceViewerContext } from './components/SourceViewerContext'
 import { WarningBanner } from './components/WarningBanner'
 import { loadScenarios } from './content/loadScenarios'
+import { loadAvatarPrefs, saveAvatarPrefs, type AvatarPrefs } from './engine/avatarPrefs'
 import { initialState, reducer } from './engine/state'
 import { collectScreenText } from './speech/collectScreenText'
 import { useReadAloud } from './speech/useReadAloud'
@@ -24,7 +26,14 @@ export default function App() {
   const readAloud = useReadAloud()
   const [openSourceId, setOpenSourceId] = useState<string | null>(null)
   const [confirmHome, setConfirmHome] = useState(false)
+  const [avatarPrefs, setAvatarPrefs] = useState<AvatarPrefs>(loadAvatarPrefs)
+  const [avatarPickerOpen, setAvatarPickerOpen] = useState(false)
   const openSource = openSourceId ? scenario?.sources[openSourceId] : undefined
+
+  function handleAvatarChange(next: AvatarPrefs) {
+    setAvatarPrefs(next)
+    saveAvatarPrefs(next)
+  }
 
   // Read the new screen whenever it changes (or when the toggle turns on).
   // Runs after render, so the DOM already shows the new screen.
@@ -71,6 +80,9 @@ export default function App() {
           <FigureHub
             scenario={scenario}
             visited={state.visited}
+            avatarPlace={state.avatarPlace}
+            avatarPrefs={avatarPrefs}
+            onMoveAvatar={(placeId) => dispatch({ type: 'move-avatar', placeId })}
             onOpenFigure={(figureId) => dispatch({ type: 'open-figure', figureId })}
             onDecide={() => dispatch({ type: 'go-to-decision' })}
           />
@@ -117,7 +129,7 @@ export default function App() {
 
   return (
     <SourceViewerContext.Provider value={setOpenSourceId}>
-      <AppHeader readAloud={readAloud} onHome={scenario ? () => setConfirmHome(true) : undefined} />
+      <AppHeader readAloud={readAloud} onHome={scenario ? () => setConfirmHome(true) : undefined} onCustomizeAvatar={() => setAvatarPickerOpen(true)} />
       <ConfirmDialog
         open={confirmHome}
         title="Leave this era?"
@@ -132,6 +144,7 @@ export default function App() {
       >
         <p>You will go back to the era menu. Your progress in this era is not saved.</p>
       </ConfirmDialog>
+      <AvatarPicker open={avatarPickerOpen} prefs={avatarPrefs} onChange={handleAvatarChange} onClose={() => setAvatarPickerOpen(false)} />
       <WarningBanner warnings={warnings} />
       {body}
       <SourcePanel sourceId={openSourceId} source={openSource} onClose={() => setOpenSourceId(null)} />

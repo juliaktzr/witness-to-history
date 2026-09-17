@@ -1,11 +1,18 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { isPlaceholder, type Figure, type MapPlace, type PlaceKind, type ScenarioMap } from '../content/types'
+import { Avatar } from './Avatar'
+import type { AvatarPrefs } from '../engine/avatarPrefs'
 
 interface Props {
   map: ScenarioMap
   figures: Figure[]
   visited: string[]
-  onOpenFigure: (figureId: string) => void
+  /** ID of the map place the student's character is standing at or walking to. */
+  avatarPlace: string | null
+  avatarPrefs: AvatarPrefs
+  /** Called when the character finishes walking to a place. */
+  onArrive?: (placeId: string) => void
+  onOpenFigure: (figureId: string, placeId?: string) => void
 }
 
 const W = 100
@@ -95,6 +102,16 @@ function PlaceIcon({ kind }: { kind: PlaceKind }) {
           ))}
         </g>
       )
+    case 'signpost':
+      return (
+        <g>
+          <rect x={-0.5} y={-9} width={1} height={12} fill="#6b4a2a" stroke={line} strokeWidth={0.3} />
+          <path d="M-0.5,-8.5 h6.5 l1.6,1.3 l-1.6,1.3 h-6.5 z" fill="#d9c2a0" stroke={line} strokeWidth={0.35} />
+          <path d="M0.5,-5.2 h-6.5 l-1.6,1.3 l1.6,1.3 h6.5 z" fill="#d9c2a0" stroke={line} strokeWidth={0.35} />
+          <circle cx={-3} cy={3} r={1} fill="#8b8b7a" />
+          <circle cx={2.5} cy={3.4} r={0.7} fill="#8b8b7a" />
+        </g>
+      )
     case 'field':
       return (
         <g>
@@ -168,9 +185,102 @@ function useNudgedPins(deps: unknown[]) {
   return { ref, dx }
 }
 
-export function TownMap({ map, figures, visited, onOpenFigure }: Props) {
+/** Walking speed: milliseconds per SVG unit of road, clamped to a comfortable range. */
+const MS_PER_UNIT = 16
+const MIN_WALK_MS = 450
+const MAX_WALK_MS = 1600
+
+/**
+ * Keeps the character's position in map percent and walks it along the drawn
+ * road whenever the target place changes. Reduced motion jumps instantly.
+ */
+function useWalker(
+  places: MapPlace[],
+  targetId: string | null,
+  roadRef: React.RefObject<SVGPathElement | null>,
+  onArrive?: (placeId: string) => void,
+) {
+  const findPlace = (id: string | null) => places.find((p) => p.id === id)
+  /** Where the character stands for a place: on the road, just left of the doorstep. */
+  const toPos = (p: MapPlace | undefined) => (p ? { x: Math.max(2, p.x - 3.5), y: ((sy(p.y) + 3) / H) * 100 } : null)
+  const [pos, setPos] = useState(() => toPos(findPlace(targetId)))
+  const [walking, setWalking] = useState(false)
+  const [facing, setFacing] = useState<'left' | 'right'>('right')
+  const lastId = useRef<string | null>(targetId)
+  const onArriveRef = useRef(onArrive)
+  onArriveRef.current = onArrive
+
+  useEffect(() => {
+    if (targetId === lastId.current) return
+    const target = findPlace(targetId)
+    const from = pos
+    lastId.current = targetId
+    if (!target) return
+    const to = toPos(target)!
+    const road = roadRef.current
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (!from || !road || reduce) {
+      setPos(to)
+      onArriveRef.current?.(target.id)
+      return
+    }
+    // Find the road lengths nearest to the start and end points, then walk between them.
+    const total = road.getTotalLength()
+    const nearest = (x: number, yPct: number) => {
+      const y = (yPct / 100) * H
+      let best = 0
+      let bestD = Infinity
+      for (let l = 0; l <= total; l += 0.5) {
+        const pt = road.getPointAtLength(l)
+        const d = Math.hypot(pt.x - x, pt.y - y)
+        if (d < bestD) {
+          bestD = d
+          best = l
+        }
+      }
+      return best
+    }
+    const l0 = nearest(from.x, from.y)
+    const l1 = nearest(to.x, to.y)
+    const duration = Math.min(MAX_WALK_MS, Math.max(MIN_WALK_MS, Math.abs(l1 - l0) * MS_PER_UNIT))
+    setFacing(to.x >= from.x ? 'right' : 'left')
+    setWalking(true)
+    let raf = 0
+    const start = performance.now()
+    const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2)
+    let lastX = from.x
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration)
+      const l = l0 + (l1 - l0) * ease(t)
+      const pt = road.getPointAtLength(l)
+      const next = { x: pt.x, y: (pt.y / H) * 100 }
+      if (Math.abs(next.x - lastX) > 0.05) setFacing(next.x > lastX ? 'right' : 'left')
+      lastX = next.x
+      setPos(next)
+      if (t < 1) {
+        raf = requestAnimationFrame(tick)
+      } else {
+        setPos(to)
+        setWalking(false)
+        onArriveRef.current?.(target.id)
+      }
+    }
+    raf = requestAnimationFrame(tick)
+    return () => {
+      cancelAnimationFrame(raf)
+      setWalking(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targetId])
+
+  return { pos, walking, facing }
+}
+
+export function TownMap({ map, figures, visited, avatarPlace, avatarPrefs, onArrive, onOpenFigure }: Props) {
   const places = map.places
   const { ref, dx } = useNudgedPins([places, figures, visited])
+  const roadRef = useRef<SVGPathElement>(null)
+  const { pos, walking, facing } = useWalker(places, avatarPlace, roadRef, onArrive)
   const rand = seeded(places.map((p) => p.id).join('|'))
   const trees: { x: number; y: number; r: number }[] = []
   for (let i = 0; i < 26 && trees.length < 18; i++) {
@@ -179,7 +289,7 @@ export function TownMap({ map, figures, visited, onOpenFigure }: Props) {
     const clear = places.every((p) => Math.hypot(p.x - x, sy(p.y) - y) > 12)
     if (clear) trees.push({ x, y, r: 1.6 + rand() * 1.4 })
   }
-  const here = places.find((p) => p.id === map.here)
+  const here = walking ? undefined : places.find((p) => p.id === (avatarPlace ?? map.here))
   const byPlace = new Map<string, Figure[]>()
   for (const f of figures) if (f.place) byPlace.set(f.place, [...(byPlace.get(f.place) ?? []), f])
 
@@ -197,7 +307,7 @@ export function TownMap({ map, figures, visited, onOpenFigure }: Props) {
           <ellipse key={i} cx={(i * 37 + 11) % W} cy={(i * 23 + 9) % H} rx={14 + i * 3} ry={6 + i} fill="#b7c98b" opacity={0.7} />
         ))}
         <path d={roadPath(places)} fill="none" stroke="#8b6b45" strokeWidth={2.8} strokeLinecap="round" />
-        <path d={roadPath(places)} fill="none" stroke="#d9c2a0" strokeWidth={1.8} strokeLinecap="round" />
+        <path ref={roadRef} d={roadPath(places)} fill="none" stroke="#d9c2a0" strokeWidth={1.8} strokeLinecap="round" />
         {trees.map((t, i) => (
           <g key={i}>
             <circle cx={t.x} cy={t.y} r={t.r} fill="#4f7a3a" />
@@ -218,11 +328,22 @@ export function TownMap({ map, figures, visited, onOpenFigure }: Props) {
       </svg>
 
       {places.map((p) => (
-        <span key={p.id} className="place-label" style={{ left: `${p.x}%`, top: `min(${p.y + 6}%, calc(100% - 1.6rem))` }} aria-hidden="true">
+        <span key={p.id} className="place-label" style={{ left: `clamp(3.4rem, ${p.x}%, calc(100% - 3.4rem))`, top: `min(${p.y + 6}%, calc(100% - 1.6rem))` }} aria-hidden="true">
           {isPlaceholder(p.label) ? 'Place name coming soon' : p.label}
           {here?.id === p.id && <span className="place-here"> You are here</span>}
         </span>
       ))}
+
+      {pos && (
+        <div
+          className={`avatar-token ${walking ? 'is-walking' : ''} face-${facing}`}
+          style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
+          aria-hidden="true"
+          data-walking={walking ? 'true' : 'false'}
+        >
+          <Avatar prefs={avatarPrefs} />
+        </div>
+      )}
 
       {places.map((p, placeIndex) =>
         (byPlace.get(p.id) ?? []).map((f, i) => {
@@ -242,7 +363,7 @@ export function TownMap({ map, figures, visited, onOpenFigure }: Props) {
                 ['--i' as string]: placeIndex + i,
               }}
               aria-label={`Talk to ${f.name} at ${placeName}${done ? ' (already talked)' : ''}`}
-              onClick={() => onOpenFigure(f.id)}
+              onClick={() => onOpenFigure(f.id, p.id)}
             >
               <span className="pin-name" aria-hidden="true">
                 {f.name}

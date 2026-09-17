@@ -43,4 +43,6 @@ sheet without touching code.
 - Map positions (`x`, `y`, `marker_x`, `marker_y`) are percentages across the
   picture: 0 is the left or top edge, 100 is the right or bottom edge.
 - Place `kind`: meeting_house, shop, farm, house, church, tavern, dock, field,
-  or other. It only changes the little drawing.
+  signpost, or other. It only changes the little drawing. Give the starting
+  place (`you_are_here` = yes) kind `signpost` so the student begins on the
+  road rather than inside a building.

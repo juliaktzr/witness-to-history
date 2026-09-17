@@ -97,6 +97,7 @@ export type PlaceKind =
   | 'tavern'
   | 'dock'
   | 'field'
+  | 'signpost'
   | 'other'
 
 /** One building or spot on the illustrated town map. x and y are percent of the map. */

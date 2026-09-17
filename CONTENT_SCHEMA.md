@@ -97,10 +97,10 @@ When this tab exists, the "talk to figures" hub draws a simple illustrated town 
 |---|---|
 | id | `meeting_house`, `shop` ... |
 | label | Name shown on the map, e.g. Mr. Hale's shop |
-| kind | Which little drawing to use: `meeting_house`, `shop`, `farm`, `house`, `church`, `tavern`, `dock`, `field`, `other` |
+| kind | Which little drawing to use: `meeting_house`, `shop`, `farm`, `house`, `church`, `tavern`, `dock`, `field`, `signpost`, `other` |
 | x | Left-to-right position, 0 to 100 |
 | y | Top-to-bottom position, 0 to 100 |
-| you_are_here | `yes` on the one place where the student is standing |
+| you_are_here | `yes` on the one place where the student starts. Make it a `signpost` at the edge of the map, not a building, so the student walks into town |
 
 ### 8. Sources (one row per primary or secondary source)
 | Column | What to write |

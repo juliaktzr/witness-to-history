@@ -1322,3 +1322,205 @@ body {
 .callout-label {
   padding-right: 2.4rem;
 }
+
+/* ---------- Student's avatar on the map ---------- */
+
+.avatar-token {
+  position: absolute;
+  width: 2.4rem;
+  height: 3.2rem;
+  transform: translate(-50%, -92%);
+  pointer-events: none;
+  z-index: 2;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+}
+
+.avatar-token .avatar-svg {
+  overflow: visible;
+}
+
+.avatar-token.face-left .avatar-svg {
+  transform: scaleX(-1);
+}
+
+.avatar-figure,
+.avatar-leg,
+.avatar-arm {
+  transform-box: fill-box;
+}
+
+.avatar-leg {
+  transform-origin: 50% 0%;
+}
+
+.avatar-arm {
+  transform-origin: 50% 8%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .avatar-token .avatar-figure {
+    transform-origin: 50% 100%;
+    animation: avatar-breathe 2.6s ease-in-out infinite;
+  }
+
+  .avatar-token.is-walking .avatar-figure {
+    animation: avatar-bob 0.36s ease-in-out infinite;
+  }
+
+  .avatar-token.is-walking .avatar-leg-l {
+    animation: avatar-swing 0.36s ease-in-out infinite;
+  }
+
+  .avatar-token.is-walking .avatar-leg-r {
+    animation: avatar-swing 0.36s ease-in-out infinite reverse;
+  }
+
+  .avatar-token.is-walking .avatar-arm-l {
+    animation: avatar-swing 0.36s ease-in-out infinite reverse;
+  }
+
+  .avatar-token.is-walking .avatar-arm-r {
+    animation: avatar-swing 0.36s ease-in-out infinite;
+  }
+}
+
+@keyframes avatar-breathe {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.02);
+  }
+}
+
+@keyframes avatar-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.9px);
+  }
+}
+
+@keyframes avatar-swing {
+  0%,
+  100% {
+    transform: rotate(-24deg);
+  }
+  50% {
+    transform: rotate(24deg);
+  }
+}
+
+/* ---------- Avatar picker ---------- */
+
+.avatar-picker {
+  width: min(100% - 2rem, 30rem);
+}
+
+.avatar-preview {
+  width: 6rem;
+  height: 8rem;
+  margin: 0.25rem auto 0.75rem;
+  padding: 0.4rem;
+  border: 3px double var(--brass);
+  border-radius: 6px;
+  background: rgba(255, 250, 238, 0.6);
+}
+
+.avatar-swatches,
+.avatar-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border: none;
+  padding: 0;
+  margin: 0 0 0.9rem;
+}
+
+.avatar-swatches legend,
+.avatar-choices legend {
+  width: 100%;
+  font-family: var(--display-sc);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 0.35rem;
+  padding: 0;
+}
+
+.avatar-swatch {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 3px solid transparent;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+}
+
+.avatar-swatch-selected {
+  border-color: var(--focus);
+  box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+.avatar-swatch:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Header icon buttons: text label on wide screens, glyph only on phones (aria-label keeps the name). */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-glyph {
+  font-size: 1.05em;
+  line-height: 1;
+}
+
+@media (max-width: 30rem) {
+  .btn-icon .btn-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .btn-icon {
+    min-width: 2.4rem;
+    padding: 0.3rem 0.5rem;
+    justify-content: center;
+  }
+
+  .app-header-title {
+    font-size: 0.9rem;
+  }
+}
+
+/* Smaller character on phones so it does not climb into the pins. */
+@media (max-width: 30rem) {
+  .avatar-token {
+    width: 1.9rem;
+    height: 2.55rem;
+  }
+}
+
+/* Long place labels wrap on phones instead of running off the map. */
+@media (max-width: 30rem) {
+  .place-label {
+    max-width: 6.4rem;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.15;
+  }
+
+  .place-here {
+    display: block;
+  }
+}
