@@ -37,6 +37,16 @@ On load the game checks every file against the schema:
 
 The game never fills in missing content on its own.
 
+## Read aloud
+
+The header has one "Read aloud" toggle. When it is on, the game reads each new
+screen with the browser's built-in Web Speech API (`speechSynthesis`), which is
+free and needs no library or network. It reads headings, body text, and the
+numbered dialogue choices and decision options, and skips navigation buttons,
+source citations, and anything a student types. The button only appears in
+browsers that support speech, and the on/off preference is remembered in the
+browser's local storage. Nothing is sent anywhere.
+
 ## Deploying
 
 Pushing to `main` runs `.github/workflows/deploy.yml`, which builds the site and

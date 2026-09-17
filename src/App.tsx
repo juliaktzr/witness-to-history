@@ -1,7 +1,10 @@
-import { useMemo, useReducer } from 'react'
+import { useEffect, useMemo, useReducer } from 'react'
+import { AppHeader } from './components/AppHeader'
 import { WarningBanner } from './components/WarningBanner'
 import { loadScenarios } from './content/loadScenarios'
 import { initialState, reducer } from './engine/state'
+import { collectScreenText } from './speech/collectScreenText'
+import { useReadAloud } from './speech/useReadAloud'
 import { Briefing } from './screens/Briefing'
 import { Decision } from './screens/Decision'
 import { Dialogue } from './screens/Dialogue'
@@ -15,6 +18,16 @@ export default function App() {
   const scenarios = useMemo(loadScenarios, [])
   const [state, dispatch] = useReducer(reducer, initialState)
   const { scenario, screen } = state
+  const readAloud = useReadAloud()
+
+  // Read the new screen whenever it changes (or when the toggle turns on).
+  // Runs after render, so the DOM already shows the new screen.
+  const screenKey = `${scenario?.id ?? ''}|${JSON.stringify(screen)}`
+  const { enabled, speak, stop } = readAloud
+  useEffect(() => {
+    if (enabled) speak(collectScreenText())
+    else stop()
+  }, [enabled, screenKey, speak, stop])
 
   const warnings = scenario
     ? scenarios.find((s) => s.scenario?.id === scenario.id)?.validation.warnings ?? []
@@ -86,6 +99,7 @@ export default function App() {
 
   return (
     <>
+      <AppHeader readAloud={readAloud} />
       <WarningBanner warnings={warnings} />
       {body}
     </>

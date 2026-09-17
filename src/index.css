@@ -29,6 +29,8 @@
 
 html {
   font-size: 20px;
+  /* Keep focused or scrolled-to elements clear of the sticky header. */
+  scroll-padding-top: 4rem;
 }
 
 body {
@@ -55,7 +57,7 @@ textarea {
 .frame {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 1rem 1rem 6rem;
+  padding: 1rem 1rem 3rem;
 }
 
 .frame-header {
@@ -87,26 +89,13 @@ textarea {
 }
 
 .frame-actions {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
   display: flex;
   gap: 0.75rem;
   justify-content: flex-end;
   flex-wrap: wrap;
-  padding: 0.75rem 1rem;
-  background: var(--surface);
+  margin-top: 2rem;
+  padding: 1rem 0 0;
   border-top: 2px solid var(--line);
-}
-
-@media (min-width: 48rem) {
-  .frame-actions {
-    position: sticky;
-    margin: 2rem -1rem 0;
-    border-radius: var(--radius);
-    border: 2px solid var(--line);
-  }
 }
 
 /* ---------- Text ---------- */
@@ -460,4 +449,58 @@ textarea {
   text-transform: none;
   font-variant: small-caps;
   letter-spacing: 0.02em;
+}
+
+/* ---------- Persistent header ---------- */
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: system-ui, sans-serif;
+}
+
+.app-header-title {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.app-header .btn {
+  border-color: var(--bg);
+  color: var(--bg);
+  background: transparent;
+}
+
+.app-header .btn:hover {
+  background: #3a3427;
+}
+
+.app-header .btn-primary {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.app-header .btn-primary:hover {
+  background: #ffffff;
+}
+
+.app-header :focus-visible {
+  outline-color: #ffd166;
+}
+
+.btn-small {
+  min-height: 2.5rem;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
