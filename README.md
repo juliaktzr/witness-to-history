@@ -37,6 +37,27 @@ On load the game checks every file against the schema:
 
 The game never fills in missing content on its own.
 
+### From the Google Sheet to JSON
+
+The content team writes in a Google Sheet with eight tabs. Blank CSV templates
+for those tabs, plus setup and export steps for the content team, are in
+`content/templates/`. To convert an export:
+
+```bash
+npm run convert -- path/to/folder-of-csvs
+```
+
+The script reads one CSV per tab (Google's `Sheet name - Tab.csv` file names
+are fine), builds the JSON, and runs the same validation the game runs. Every
+problem is printed with the tab, row, and column to fix, for example:
+
+```
+✖ Row 5 of Dialogue (committee_intro), column "choice_1_next": "committee_fair" is not a dialogue ID or END.
+```
+
+It writes `content/scenarios/<id>.json` only when there are no errors. Warnings
+about unfinished `TODO` cells are listed but do not block the file.
+
 ## Read aloud
 
 The header has one "Read aloud" toggle. When it is on, the game reads each new

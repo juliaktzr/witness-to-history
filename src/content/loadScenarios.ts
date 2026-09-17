@@ -1,5 +1,5 @@
-import type { Scenario } from './types'
-import { validateScenario, type ValidationResult } from './validate'
+import type { Scenario } from './types.ts'
+import { validateScenario, type ValidationResult } from './validate.ts'
 
 export interface LoadedScenario {
   /** File name without extension, used as a stable key even if the JSON is broken. */

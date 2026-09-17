@@ -22,6 +22,7 @@ Peabody students write content in a shared Google Sheet with the tabs below. The
 | location | Where it takes place | A small town in Massachusetts |
 | summary | One sentence for the era menu | Your town must decide whether to enforce a boycott of British goods. |
 | cover_image | Public domain image link | (link) |
+| cover_image_alt | Description of the cover image for accessibility | A crowd in a colonial town square |
 
 ### 2. Briefing (one row per screen, in order)
 | Column | What to write |
@@ -99,7 +100,7 @@ A row with no choices ends the conversation and returns the student to the figur
 | excerpt | Short excerpt students can read (optional, public domain only) |
 
 ## JSON shape (for the CS team)
-The converter turns the sheet into this structure. See `content/scenarios/rev_1775_boycott.json` for a full example.
+The converter (`npm run convert -- <folder-of-csvs>`, see `content/templates/README.md`) turns the sheet into this structure. See `content/scenarios/rev_1775_boycott.json` for a full example.
 
 ```json
 {

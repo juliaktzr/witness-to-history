@@ -1,4 +1,4 @@
-import { END, isPlaceholder, type Scenario } from './types'
+import { END, isPlaceholder, type Scenario } from './types.ts'
 
 export interface ValidationIssue {
   /** Where in the file the problem is, e.g. "dialogue.merchant_risk.text" */
