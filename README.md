@@ -37,6 +37,18 @@ On load the game checks every file against the schema:
 
 The game never fills in missing content on its own.
 
+### Images
+
+Put image files in `public/images/<scenario-id>/` and write the path without a
+leading slash in the sheet, for example
+`images/rev_1775_boycott/a-political-lesson-1774.jpg`. The game prefixes the
+site's base path, so the same content works locally and on GitHub Pages. Full
+`https://` links also work, but self-hosting is more reliable on school
+networks. Keep each file under about 300 KB and 1200 px on the long side
+(`sips -Z 1200 file.jpg` on a Mac). Only public domain or "no known
+restrictions" images, and record each one in the Sources tab with type
+`image` so it opens in the source panel.
+
 ### From the Google Sheet to JSON
 
 The content team writes in a Google Sheet with eight tabs. Blank CSV templates

@@ -276,17 +276,34 @@ h2 .placeholder {
 
 /* ---------- Images ---------- */
 
-.card-image,
-.hero-image {
+.card-image {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
+  object-position: center 30%;
 }
 
+/* Show the whole picture. Prints and documents are usually portrait, and
+   cropping a broadside to a wide strip hides what it is. */
 .hero-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 60vh;
+  object-fit: contain;
+  background: #ece5d6;
   border-radius: var(--radius);
   border: 2px solid var(--line);
+}
+
+/* A marked image keeps its exact aspect so percent marker positions land on the picture. */
+.marked-image .hero-image {
+  max-height: none;
+}
+
+.image-placeholder.hero-image {
+  aspect-ratio: 16 / 9;
 }
 
 .portrait {

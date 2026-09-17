@@ -37,6 +37,9 @@ sheet without touching code.
 - `is_real_person`: `yes` or `no`. Source `type`: document, image, map,
   letter, newspaper, or secondary.
 - Every image needs an alt text cell filled in.
+- Image cells take a full `https://` link or a file the CS team has placed in
+  the site, written like `images/<scenario-id>/<file>.jpg`. Send the CS team
+  the file plus its rights statement and source page.
 - Map positions (`x`, `y`, `marker_x`, `marker_y`) are percentages across the
   picture: 0 is the left or top edge, 100 is the right or bottom edge.
 - Place `kind`: meeting_house, shop, farm, house, church, tavern, dock, field,

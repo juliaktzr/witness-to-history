@@ -1,7 +1,10 @@
 id,title,creator,date,type,url,excerpt
 src_association,The Continental Association,First Continental Congress,"Oct 20, 1774",document,https://avalon.law.yale.edu/18th_century/contcong_10-20-74.asp,
-src_port_act,Boston Port Act,British Parliament,1774,document,TODO: Peabody finds archive link,
+src_port_act,Boston Port Act,British Parliament,"March 31, 1774",document,https://avalon.law.yale.edu/18th_century/boston_port_act.asp,
 src_chronicle,"""Trade Violators Exposed!"" Boston Chronicle",Boston Chronicle,Aug 1769,newspaper,https://www.masshist.org/revolution/non_importation.php,
 src_homespun,"""Made in America,"" Essex Gazette",Essex Gazette,May 1769,newspaper,https://www.masshist.org/revolution/non_importation.php,
 src_imports,Continental Association overview,Colonial Williamsburg,No date given,secondary,https://www.colonialwilliamsburg.org/discover/moments-in-history/the-tea-crisis/the-continental-association/,
 src_map,A map of the most inhabited part of New England,Thomas Jefferys,1774,map,https://www.loc.gov/item/74692159/,
+src_broadside,Broadside: The Boston Committee of Correspondence responds to the Boston Port Bill,Boston Committee of Correspondence,"May 12, 1774",image,https://lccn.loc.gov/2006682758,
+src_bostonians,The Bostonians in Distress,"Unknown artist, printed in London",1774,image,https://www.britishmuseum.org/collection/object/P_1877-1013-854,
+src_lesson,A Political Lesson,John Dixon,1774,image,https://lccn.loc.gov/2004672699,

@@ -1,3 +1,4 @@
+import { assetUrl } from '../content/assetUrl'
 import { isPlaceholder, type ImageRef } from '../content/types'
 
 interface Props {
@@ -16,5 +17,5 @@ export function ContentImage({ image, label, className }: Props) {
     )
   }
   const alt = isPlaceholder(image.alt) ? `${label} (description coming soon)` : image.alt
-  return <img className={className} src={image.src} alt={alt} />
+  return <img className={className} src={assetUrl(image.src)} alt={alt} loading="lazy" decoding="async" />
 }

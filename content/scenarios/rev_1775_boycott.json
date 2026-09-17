@@ -11,16 +11,26 @@
       "heading": "A port closed",
       "text": "In 1774, Parliament punished Boston for the destruction of East India Company tea by closing its port. Other laws followed that changed how Massachusetts was governed. Many colonists saw these as an attack on their rights.",
       "sources": [
-        "src_port_act"
-      ]
+        "src_port_act",
+        "src_broadside"
+      ],
+      "image": {
+        "src": "images/rev_1775_boycott/boston-committee-broadside-1774.jpg",
+        "alt": "A printed broadside from 1774, dense with small type, in which Boston's Committee of Correspondence responds to the closing of Boston's port."
+      }
     },
     {
       "id": "brief_2",
       "heading": "A colony-wide agreement",
       "text": "That October, delegates from twelve colonies signed the Continental Association. Starting December 1, 1774, the colonies would stop importing British goods. Merchants who kept selling them would be breaking the agreement.",
       "sources": [
-        "src_association"
-      ]
+        "src_association",
+        "src_lesson"
+      ],
+      "image": {
+        "src": "images/rev_1775_boycott/a-political-lesson-1774.jpg",
+        "alt": "A 1774 print of a rearing black horse that has thrown its rider. The rider has hit his head on a mile marker reading \"To Boston VI miles\", and a signpost points toward Salem."
+      }
     },
     {
       "id": "brief_3",
@@ -308,9 +318,9 @@
     "src_port_act": {
       "title": "Boston Port Act",
       "creator": "British Parliament",
-      "date": "1774",
+      "date": "March 31, 1774",
       "type": "document",
-      "url": "TODO: Peabody finds archive link",
+      "url": "https://avalon.law.yale.edu/18th_century/boston_port_act.asp",
       "excerpt": ""
     },
     "src_chronicle": {
@@ -344,10 +354,34 @@
       "type": "map",
       "url": "https://www.loc.gov/item/74692159/",
       "excerpt": ""
+    },
+    "src_broadside": {
+      "title": "Broadside: The Boston Committee of Correspondence responds to the Boston Port Bill",
+      "creator": "Boston Committee of Correspondence",
+      "date": "May 12, 1774",
+      "type": "image",
+      "url": "https://lccn.loc.gov/2006682758",
+      "excerpt": ""
+    },
+    "src_bostonians": {
+      "title": "The Bostonians in Distress",
+      "creator": "Unknown artist, printed in London",
+      "date": "1774",
+      "type": "image",
+      "url": "https://www.britishmuseum.org/collection/object/P_1877-1013-854",
+      "excerpt": ""
+    },
+    "src_lesson": {
+      "title": "A Political Lesson",
+      "creator": "John Dixon",
+      "date": "1774",
+      "type": "image",
+      "url": "https://lccn.loc.gov/2004672699",
+      "excerpt": ""
     }
   },
   "coverImage": {
-    "src": "TODO: Peabody finds a public domain image (see Image notes)",
-    "alt": "TODO: describe the image in one sentence"
+    "src": "images/rev_1775_boycott/bostonians-in-distress-1774.jpg",
+    "alt": "A 1774 satirical print. Several Bostonians are locked in a cage hanging from a tree while British soldiers and cannons surround them. People below pass fish up to the cage on poles."
   }
 }
