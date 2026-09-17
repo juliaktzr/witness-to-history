@@ -1,12 +1,14 @@
 import { isPlaceholder, type Scenario } from '../content/types'
+import { useOpenSource } from './SourceViewerContext'
 
 interface Props {
   ids: string[]
   scenario: Scenario
 }
 
-/** Small "Based on" line under a text block. Full source viewer is Phase 2. */
+/** "Based on" line under a text block. Each name opens the source panel. */
 export function SourceList({ ids, scenario }: Props) {
+  const openSource = useOpenSource()
   if (ids.length === 0) return null
   return (
     <p className="sources">
@@ -14,17 +16,12 @@ export function SourceList({ ids, scenario }: Props) {
       {ids.map((id, i) => {
         const src = scenario.sources[id]
         const title = src && !isPlaceholder(src.title) ? src.title : id
-        const link = src && !isPlaceholder(src.url)
         return (
           <span key={id}>
             {i > 0 && ', '}
-            {link ? (
-              <a href={src.url} target="_blank" rel="noreferrer">
-                {title}
-              </a>
-            ) : (
-              title
-            )}
+            <button type="button" className="link-button" onClick={() => openSource(id)}>
+              {title}
+            </button>
           </span>
         )
       })}

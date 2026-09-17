@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useReducer } from 'react'
+import { useEffect, useMemo, useReducer, useState } from 'react'
 import { AppHeader } from './components/AppHeader'
+import { SourcePanel } from './components/SourcePanel'
+import { SourceViewerContext } from './components/SourceViewerContext'
 import { WarningBanner } from './components/WarningBanner'
 import { loadScenarios } from './content/loadScenarios'
 import { initialState, reducer } from './engine/state'
@@ -19,6 +21,8 @@ export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { scenario, screen } = state
   const readAloud = useReadAloud()
+  const [openSourceId, setOpenSourceId] = useState<string | null>(null)
+  const openSource = openSourceId ? scenario?.sources[openSourceId] : undefined
 
   // Read the new screen whenever it changes (or when the toggle turns on).
   // Runs after render, so the DOM already shows the new screen.
@@ -28,6 +32,18 @@ export default function App() {
     if (enabled) speak(collectScreenText())
     else stop()
   }, [enabled, screenKey, speak, stop])
+
+  // Read a source record when its panel opens; go back to silence when it closes.
+  useEffect(() => {
+    if (!enabled) return
+    if (openSourceId) speak(collectScreenText(document.querySelector('.source-panel') ?? undefined))
+    else stop()
+  }, [enabled, openSourceId, speak, stop])
+
+  // Leaving the scenario closes any open panel.
+  useEffect(() => {
+    if (!scenario) setOpenSourceId(null)
+  }, [scenario])
 
   const warnings = scenario
     ? scenarios.find((s) => s.scenario?.id === scenario.id)?.validation.warnings ?? []
@@ -98,10 +114,11 @@ export default function App() {
   }
 
   return (
-    <>
+    <SourceViewerContext.Provider value={setOpenSourceId}>
       <AppHeader readAloud={readAloud} />
       <WarningBanner warnings={warnings} />
       {body}
-    </>
+      <SourcePanel sourceId={openSourceId} source={openSource} onClose={() => setOpenSourceId(null)} />
+    </SourceViewerContext.Provider>
   )
 }

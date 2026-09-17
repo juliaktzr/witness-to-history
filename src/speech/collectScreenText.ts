@@ -4,16 +4,17 @@
  * looks at the rendered Frame, not at scenario data.
  */
 export function collectScreenText(root: ParentNode = document): string[] {
-  const frame = root.querySelector('main.frame')
+  const frame = root instanceof Element && root.matches('.source-panel') ? root : root.querySelector('main.frame')
   if (!frame) return []
 
   const parts: string[] = []
   let choiceNumber = 0
-  const nodes = frame.querySelectorAll<HTMLElement>('h1, h2, p, label, button')
+  const nodes = frame.querySelectorAll<HTMLElement>('h1, h2, h3, p, label, button, dt, dd')
 
   for (const el of nodes) {
     if (el.closest('.frame-actions')) continue // Next / Back buttons are navigation, not content
-    if (el.closest('.sources')) continue // citations are for the source viewer, not for listening
+    if (el.closest('.sources')) continue // citations are for the source panel, not for listening
+    if (el.tagName === 'DD') continue // read together with its <dt> below
     if (el.closest('[aria-hidden="true"]')) continue
     if (el.tagName === 'BUTTON' && !el.classList.contains('btn-choice')) continue // card buttons repeat the name
 
@@ -23,6 +24,9 @@ export function collectScreenText(root: ParentNode = document): string[] {
     if (el.classList.contains('btn-choice')) {
       choiceNumber += 1
       parts.push(`Choice ${choiceNumber}: ${text}`)
+    } else if (el.tagName === 'DT') {
+      const value = (el.nextElementSibling?.textContent ?? '').replace(/\s+/g, ' ').trim()
+      parts.push(`${text}: ${value}`)
     } else {
       parts.push(text)
     }

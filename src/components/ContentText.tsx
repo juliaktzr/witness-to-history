@@ -6,19 +6,24 @@ interface Props {
   label: string
   as?: 'p' | 'span' | 'h1' | 'h2' | 'h3'
   className?: string
+  id?: string
 }
 
 /**
  * Renders authored text. If the cell is empty or TODO, shows an obvious
  * placeholder instead. The engine never fills in content itself.
  */
-export function ContentText({ value, label, as: Tag = 'p', className }: Props) {
+export function ContentText({ value, label, as: Tag = 'p', className, id }: Props) {
   if (isPlaceholder(value)) {
     return (
-      <Tag className={`placeholder ${className ?? ''}`} role={Tag === 'span' ? undefined : 'note'}>
+      <Tag id={id} className={`placeholder ${className ?? ''}`} role={Tag === 'span' ? undefined : 'note'}>
         Content coming soon: {label}
       </Tag>
     )
   }
-  return <Tag className={className}>{value}</Tag>
+  return (
+    <Tag id={id} className={className}>
+      {value}
+    </Tag>
+  )
 }

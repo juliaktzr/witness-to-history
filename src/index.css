@@ -504,3 +504,90 @@ textarea {
   white-space: nowrap;
   flex-shrink: 0;
 }
+
+/* ---------- Source links and panel ---------- */
+
+.link-button {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  color: #5c2109;
+}
+
+.source-panel {
+  width: min(100% - 2rem, 36rem);
+  max-height: calc(100% - 2rem);
+  padding: 0;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.source-panel::backdrop {
+  background: rgba(29, 26, 20, 0.6);
+}
+
+.source-panel-body {
+  padding: 1.25rem;
+}
+
+.source-panel-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.4rem;
+  line-height: 1.25;
+}
+
+.source-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1rem;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.source-facts dt {
+  font-family: system-ui, sans-serif;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.source-facts dd {
+  margin: 0;
+}
+
+.source-facts a {
+  color: var(--accent);
+}
+
+.excerpt {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-left: 6px solid var(--line);
+  background: var(--bg);
+  font-style: italic;
+}
+
+.source-panel .frame-actions {
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 30rem) {
+  .source-facts {
+    grid-template-columns: 1fr;
+    gap: 0.1rem;
+  }
+
+  .source-facts dd {
+    margin-bottom: 0.5rem;
+  }
+}
