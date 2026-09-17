@@ -1,0 +1,120 @@
+{
+  "id": "rev_1775_boycott",
+  "title": "Stand With the Boycott?",
+  "era": "American Revolution",
+  "year": 1775,
+  "location": "A small town in Massachusetts",
+  "summary": "PLACEHOLDER CONTENT, not yet verified. Your town must decide whether to enforce a boycott of British goods.",
+  "coverImage": { "src": "TODO", "alt": "TODO" },
+  "briefing": [
+    {
+      "id": "brief_1",
+      "heading": "Welcome to 1775",
+      "text": "Tension between Britain and its American colonies is rising. After the Boston Tea Party, Parliament closed Boston's port. Many colonists are angry.",
+      "image": { "src": "TODO", "alt": "TODO" },
+      "sources": ["src_port_act"]
+    },
+    {
+      "id": "brief_2",
+      "heading": "A boycott",
+      "text": "Colonial leaders agreed to stop buying British goods. Now each town has to decide how seriously to enforce it. That is where you come in.",
+      "image": { "src": "TODO", "alt": "TODO" },
+      "sources": ["src_association"]
+    }
+  ],
+  "figures": [
+    {
+      "id": "merchant",
+      "name": "Mr. Hale",
+      "role": "A local merchant who sells imported goods",
+      "isRealPerson": false,
+      "portrait": { "src": "TODO", "alt": "TODO" },
+      "startNode": "merchant_intro"
+    },
+    {
+      "id": "committee",
+      "name": "Mrs. Porter",
+      "role": "A member of the town's enforcement committee",
+      "isRealPerson": false,
+      "portrait": { "src": "TODO", "alt": "TODO" },
+      "startNode": "committee_intro"
+    }
+  ],
+  "dialogue": {
+    "merchant_intro": {
+      "figure": "merchant",
+      "text": "If I stop selling British cloth and tea, my family could lose everything. But my neighbors may stop trusting me if I keep selling.",
+      "sources": ["src_association"],
+      "choices": [
+        { "text": "What happens if you keep selling?", "next": "merchant_risk" },
+        { "text": "Do you support the Patriots?", "next": "merchant_loyalty" }
+      ]
+    },
+    "merchant_risk": {
+      "figure": "merchant",
+      "text": "TODO: Peabody team writes what could happen to merchants who broke the boycott.",
+      "sources": [],
+      "choices": [ { "text": "Thank you, Mr. Hale.", "next": "END" } ]
+    },
+    "merchant_loyalty": {
+      "figure": "merchant",
+      "text": "TODO: Peabody team writes the merchant's mixed feelings.",
+      "sources": [],
+      "choices": []
+    },
+    "committee_intro": {
+      "figure": "committee",
+      "text": "Our committee watches who buys and sells British goods. If we are not united, Parliament will never listen.",
+      "sources": ["src_association"],
+      "choices": [
+        { "text": "Is that fair to merchants like Mr. Hale?", "next": "committee_fair" }
+      ]
+    },
+    "committee_fair": {
+      "figure": "committee",
+      "text": "TODO: Peabody team writes the committee member's response.",
+      "sources": [],
+      "choices": []
+    }
+  },
+  "decision": {
+    "prompt": "The town meeting is tonight. What do you vote for?",
+    "context": "You do not know if Britain will back down, go to war, or punish towns that resist.",
+    "options": [
+      { "text": "Strictly enforce the boycott", "outcome": "outcome_enforce" },
+      { "text": "Allow merchants to sell what they already have", "outcome": "outcome_compromise" },
+      { "text": "Refuse to enforce the boycott", "outcome": "outcome_refuse" }
+    ]
+  },
+  "outcomes": {
+    "outcome_enforce": { "title": "United, but hurting", "text": "TODO", "sources": [] },
+    "outcome_compromise": { "title": "A careful middle path", "text": "TODO", "sources": [] },
+    "outcome_refuse": { "title": "Standing apart", "text": "TODO", "sources": [] }
+  },
+  "reveal": {
+    "text": "TODO: Peabody team writes what towns actually did and what happened next.",
+    "sources": ["src_association"]
+  },
+  "reflection": [
+    { "id": "reflect_1", "prompt": "What information did you wish you had before you voted?" },
+    { "id": "reflect_2", "prompt": "Why might a real colonist have chosen differently than you?" }
+  ],
+  "sources": {
+    "src_port_act": {
+      "title": "Boston Port Act",
+      "creator": "British Parliament",
+      "date": "1774",
+      "type": "document",
+      "url": "TODO: Peabody team adds archive link",
+      "excerpt": ""
+    },
+    "src_association": {
+      "title": "Continental Association",
+      "creator": "First Continental Congress",
+      "date": "October 1774",
+      "type": "document",
+      "url": "TODO: Peabody team adds archive link",
+      "excerpt": ""
+    }
+  }
+}
