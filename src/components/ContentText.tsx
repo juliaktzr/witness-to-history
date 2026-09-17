@@ -15,7 +15,7 @@ interface Props {
 export function ContentText({ value, label, as: Tag = 'p', className }: Props) {
   if (isPlaceholder(value)) {
     return (
-      <Tag className={`placeholder ${className ?? ''}`} role="note">
+      <Tag className={`placeholder ${className ?? ''}`} role={Tag === 'span' ? undefined : 'note'}>
         Content coming soon: {label}
       </Tag>
     )

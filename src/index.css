@@ -453,3 +453,11 @@ textarea {
     height: 4rem;
   }
 }
+
+/* Inside a <label>, uppercase text-transform leaks into the textbox's
+   accessible name and some screen readers spell it letter by letter. */
+.reflect-label .kicker {
+  text-transform: none;
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
+}

@@ -1,3 +1,4 @@
+import { ChoiceButton } from '../components/ChoiceButton'
 import { ContentImage } from '../components/ContentImage'
 import { ContentText } from '../components/ContentText'
 import { Frame } from '../components/Frame'
@@ -49,9 +50,7 @@ export function Dialogue({ scenario, figureId, nodeId, onChoice, onLeave }: Prop
           <ul className="choice-list">
             {node.choices.map((c, i) => (
               <li key={i}>
-                <button type="button" className="btn btn-choice" onClick={() => onChoice(c.next)}>
-                  <ContentText value={c.text} label={`choice ${i + 1}`} as="span" />
-                </button>
+                <ChoiceButton text={c.text} label={`choice ${i + 1}`} onClick={() => onChoice(c.next)} />
               </li>
             ))}
           </ul>

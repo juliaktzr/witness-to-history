@@ -1,3 +1,4 @@
+import { ChoiceButton } from '../components/ChoiceButton'
 import { ContentText } from '../components/ContentText'
 import { Frame } from '../components/Frame'
 import type { Scenario } from '../content/types'
@@ -28,9 +29,7 @@ export function Decision({ scenario, onDecide, onBack }: Props) {
       <ul className="choice-list">
         {decision.options.map((o, i) => (
           <li key={i}>
-            <button type="button" className="btn btn-choice" onClick={() => onDecide(o.outcome)}>
-              <ContentText value={o.text} label={`option ${i + 1}`} as="span" />
-            </button>
+            <ChoiceButton text={o.text} label={`option ${i + 1}`} onClick={() => onDecide(o.outcome)} />
           </li>
         ))}
       </ul>
