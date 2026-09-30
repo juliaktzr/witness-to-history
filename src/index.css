@@ -1524,3 +1524,279 @@ body {
     display: block;
   }
 }
+
+/* =====================================================================
+   Sims-inspired chrome. The parchment/ink/brass theme above stays for
+   historical content (text, portraits, documents); this layer reskins
+   just the game chrome (buttons, pins, badges, header) with a rounder,
+   glossier, bouncier feel, closer to a life-sim's UI. Pure CSS, no
+   image assets. Later rules win, so this comes last.
+   ===================================================================== */
+
+:root {
+  --chrome-font: 'Baloo 2', system-ui, sans-serif;
+  --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --plumbob: #4ee85a;
+  --plumbob-dark: #1f8a2a;
+}
+
+.btn,
+.badge,
+.pin,
+.app-header-title,
+.place-label,
+.avatar-swatches legend,
+.avatar-choices legend {
+  font-family: var(--chrome-font);
+}
+
+/* ---------- Glossy, bouncy buttons ---------- */
+
+.btn {
+  border-width: 3px;
+  border-radius: 16px;
+  font-weight: 600;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 55%);
+  transition: transform 180ms var(--bounce), box-shadow 180ms var(--bounce), background-color 120ms ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.96);
+}
+
+.btn-primary {
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 55%),
+    linear-gradient(#843216, var(--accent));
+}
+
+.btn-choice {
+  border-radius: 14px;
+  border-width: 2px;
+}
+
+.btn-choice:hover {
+  transform: translateX(3px);
+}
+
+.app-header .btn {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0) 55%);
+}
+
+/* ---------- Rounder, friendlier panels ---------- */
+
+.card,
+.reflect-block,
+.callout {
+  border-radius: 16px;
+}
+
+.card::before {
+  border-radius: 13px;
+}
+
+.card-image {
+  border-radius: 13px 13px 0 0;
+}
+
+.speech-bubble,
+.source-panel {
+  border-radius: 20px;
+}
+
+/* Comic-style speech bubble tail, pointing at the portrait beside it. */
+.speech-bubble {
+  position: relative;
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  left: -0.65rem;
+  top: 1.3rem;
+  width: 0;
+  height: 0;
+  border-top: 0.5rem solid transparent;
+  border-bottom: 0.5rem solid transparent;
+  border-right: 0.75rem solid var(--line);
+}
+
+.speech-bubble::before {
+  /* Sit the decorative quote mark above the new tail instead of on top of it. */
+  z-index: 1;
+}
+
+@media (max-width: 30rem) {
+  /* Portrait sits above the bubble on narrow screens; the side tail no longer points at it. */
+  .speech-bubble::after {
+    display: none;
+  }
+}
+
+/* ---------- Pins: chunky, candy-shell, bouncy on drop ---------- */
+
+.pin {
+  border-width: 3px;
+  font-weight: 700;
+}
+
+/* ---------- Plumbob: a floating nod to The Sims over the student's character ---------- */
+
+.avatar-token::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -1.15rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  transform: translateX(-50%) rotate(45deg);
+  background: linear-gradient(135deg, #baff9a, var(--plumbob));
+  border: 1.5px solid var(--plumbob-dark);
+  border-radius: 2px;
+  box-shadow: 0 0 7px rgba(78, 232, 90, 0.85);
+  z-index: 3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .avatar-token::before {
+    animation: plumbob-float 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes plumbob-float {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0) rotate(45deg);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-0.22rem) rotate(45deg);
+  }
+}
+
+@media (max-width: 30rem) {
+  .avatar-token::before {
+    width: 0.5rem;
+    height: 0.5rem;
+    top: -0.9rem;
+  }
+}
+
+/* ---------- Quest progress (figure hub) ---------- */
+
+.quest-progress {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--chrome-font);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.quest-progress-bar {
+  flex: 0 0 auto;
+  width: 6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.quest-progress-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--plumbob-dark), var(--plumbob));
+  border-radius: inherit;
+  transition: width 500ms var(--bounce);
+}
+
+/* ---------- Completion celebration ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn-pop {
+    animation: btn-pop 650ms var(--bounce);
+  }
+}
+
+@keyframes btn-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.confetti-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin: -0.22rem 0 0 -0.22rem;
+  border-radius: 2px;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.confetti-dot:nth-child(2) {
+  --dx: 2.2rem;
+  --dy: -1.6rem;
+  background: var(--plumbob);
+}
+
+.confetti-dot:nth-child(3) {
+  --dx: -2.4rem;
+  --dy: -1.2rem;
+  background: var(--brass);
+}
+
+.confetti-dot:nth-child(4) {
+  --dx: 1.6rem;
+  --dy: 2rem;
+  background: var(--accent);
+}
+
+.confetti-dot:nth-child(5) {
+  --dx: -1.8rem;
+  --dy: 1.8rem;
+  background: var(--focus);
+}
+
+.confetti-dot:nth-child(6) {
+  --dx: 2.8rem;
+  --dy: 0.2rem;
+  background: var(--plumbob-dark);
+}
+
+.confetti-dot:nth-child(7) {
+  --dx: -2.9rem;
+  --dy: 0rem;
+  background: var(--brass);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .is-celebrating .confetti-dot {
+    animation: confetti-pop 750ms ease-out forwards;
+  }
+}
+
+@keyframes confetti-pop {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.6) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(1) rotate(180deg);
+  }
+}
