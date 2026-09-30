@@ -1,5 +1,5 @@
 import type React from 'react'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { ContentImage } from '../components/ContentImage'
 import { ContentText } from '../components/ContentText'
 import { Frame } from '../components/Frame'
@@ -13,10 +13,16 @@ interface Props {
   visited: string[]
   avatarPlace: string | null
   avatarPrefs: AvatarPrefs
+  /** True for one render right after the last figure is visited, so this screen can celebrate it once. */
+  celebrate: boolean
+  onCelebrationDone: () => void
   onMoveAvatar: (placeId: string) => void
   onOpenFigure: (figureId: string) => void
   onDecide: () => void
 }
+
+/** A handful of little bursting dots, purely decorative, honoring reduced-motion via CSS. */
+const CONFETTI_DOTS = [0, 1, 2, 3, 4, 5]
 
 /** "Meeting house" -> "the meeting house"; "Mr. Hale's shop" stays as written. */
 function placePhrase(label: string): string {
@@ -25,11 +31,27 @@ function placePhrase(label: string): string {
   return properNoun ? label : `the ${label.charAt(0).toLowerCase()}${label.slice(1)}`
 }
 
-export function FigureHub({ scenario, visited, avatarPlace, avatarPrefs, onMoveAvatar, onOpenFigure, onDecide }: Props) {
+export function FigureHub({
+  scenario,
+  visited,
+  avatarPlace,
+  avatarPrefs,
+  celebrate,
+  onCelebrationDone,
+  onMoveAvatar,
+  onOpenFigure,
+  onDecide,
+}: Props) {
   /** Figure to open once the character finishes walking. */
   const pending = useRef<{ figureId: string; placeId: string } | null>(null)
   const allVisited = scenario.figures.every((f) => visited.includes(f.id))
   const map = scenario.map && scenario.map.places.length > 0 ? scenario.map : undefined
+
+  useEffect(() => {
+    if (!celebrate) return
+    const t = setTimeout(onCelebrationDone, 900)
+    return () => clearTimeout(t)
+  }, [celebrate, onCelebrationDone])
   const here = map?.places.find((p) => p.id === (avatarPlace ?? map.here))
   const unplaced = map ? scenario.figures.filter((f) => !f.place || !map.places.some((p) => p.id === f.place)) : scenario.figures
 
@@ -64,6 +86,16 @@ export function FigureHub({ scenario, visited, avatarPlace, avatarPrefs, onMoveA
       }
     >
       <p className="lead">Talk to each person to learn what they know and what worries them.</p>
+      <p className={`quest-progress ${celebrate ? 'is-celebrating' : ''}`} aria-live="polite">
+        <span className={`quest-progress-bar ${celebrate ? 'btn-pop' : ''}`} aria-hidden="true">
+          <span
+            className="quest-progress-fill"
+            style={{ width: `${scenario.figures.length ? (visited.length / scenario.figures.length) * 100 : 0}%` }}
+          />
+        </span>
+        {visited.length} of {scenario.figures.length} people met
+        {celebrate && CONFETTI_DOTS.map((i) => <span key={i} className="confetti-dot" aria-hidden="true" />)}
+      </p>
       {map && (
         <>
           {here && (

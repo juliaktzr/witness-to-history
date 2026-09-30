@@ -17,6 +17,8 @@ export interface GameState {
   visited: string[]
   /** ID of the map place the student's avatar is currently standing at, if the scenario has a map. */
   avatarPlace: string | null
+  /** True for the one render right after the student's last visit completes the figure list, so the hub can celebrate it once. */
+  justCompletedAll: boolean
 }
 
 export type Action =
@@ -34,12 +36,21 @@ export type Action =
   | { type: 'reveal-next' }
   | { type: 'restart' }
   | { type: 'quit' }
+  | { type: 'clear-celebration' }
 
 export const initialState: GameState = {
   scenario: null,
   screen: { kind: 'era-select' },
   visited: [],
   avatarPlace: null,
+  justCompletedAll: false,
+}
+
+function visitFigure(state: GameState, figureId: string): { visited: string[]; justCompletedAll: boolean } {
+  const visited = markVisited(state.visited, figureId)
+  const justCompletedAll =
+    visited.length > state.visited.length && !!state.scenario && state.scenario.figures.every((f) => visited.includes(f.id))
+  return { visited, justCompletedAll }
 }
 
 function markVisited(visited: string[], figureId: string): string[] {
@@ -55,6 +66,7 @@ export function reducer(state: GameState, action: Action): GameState {
         screen: { kind: 'briefing', index: 0 },
         visited: [],
         avatarPlace: action.scenario.map?.here ?? null,
+        justCompletedAll: false,
       }
 
     case 'briefing-next': {
@@ -82,14 +94,14 @@ export function reducer(state: GameState, action: Action): GameState {
     case 'dialogue-choice': {
       if (screen.kind !== 'dialogue') return state
       if (action.next === END || !scenario?.dialogue[action.next]) {
-        return { ...state, visited: markVisited(state.visited, screen.figureId), screen: { kind: 'hub' } }
+        return { ...state, ...visitFigure(state, screen.figureId), screen: { kind: 'hub' } }
       }
       return { ...state, screen: { ...screen, nodeId: action.next } }
     }
 
     case 'leave-dialogue': {
       if (screen.kind !== 'dialogue') return state
-      return { ...state, visited: markVisited(state.visited, screen.figureId), screen: { kind: 'hub' } }
+      return { ...state, ...visitFigure(state, screen.figureId), screen: { kind: 'hub' } }
     }
 
     case 'go-to-decision':
@@ -111,9 +123,18 @@ export function reducer(state: GameState, action: Action): GameState {
 
     case 'restart':
       if (!scenario) return initialState
-      return { scenario, screen: { kind: 'briefing', index: 0 }, visited: [], avatarPlace: scenario.map?.here ?? null }
+      return {
+        scenario,
+        screen: { kind: 'briefing', index: 0 },
+        visited: [],
+        avatarPlace: scenario.map?.here ?? null,
+        justCompletedAll: false,
+      }
 
     case 'quit':
       return initialState
+
+    case 'clear-celebration':
+      return { ...state, justCompletedAll: false }
   }
 }

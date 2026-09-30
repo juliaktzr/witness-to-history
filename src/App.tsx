@@ -82,6 +82,8 @@ export default function App() {
             visited={state.visited}
             avatarPlace={state.avatarPlace}
             avatarPrefs={avatarPrefs}
+            celebrate={state.justCompletedAll}
+            onCelebrationDone={() => dispatch({ type: 'clear-celebration' })}
             onMoveAvatar={(placeId) => dispatch({ type: 'move-avatar', placeId })}
             onOpenFigure={(figureId) => dispatch({ type: 'open-figure', figureId })}
             onDecide={() => dispatch({ type: 'go-to-decision' })}
