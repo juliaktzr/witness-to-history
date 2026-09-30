@@ -4,6 +4,39 @@ A browser game where students step into a moment in American history, talk with
 the people who lived it, and face the same decision they faced. See `CLAUDE.md`
 for the project brief and `CONTENT_SCHEMA.md` for how content is written.
 
+## Current state
+
+The full core loop works end to end: era select → briefing → figure hub (with
+an optional town map) → dialogue → decision → outcome → historical reveal →
+reflection. `rev_1775_boycott` is the one scenario with real content;
+`zz_engine_stress_test` is a fixture for exercising edge cases in the engine,
+not a real era.
+
+A few things worth knowing before you touch styling or the hub screen:
+
+- **Visual theme lives in one file, `src/index.css`, in layers.** A base
+  accessible layer (large text, high contrast) is overridden by a
+  parchment/ink/brass "historical document" theme, which is itself overridden
+  by a "Sims-inspired chrome" layer for game UI — buttons, pins, badges, the
+  header — rounder, glossier, bouncier, set in the `Baloo 2` font. Each layer
+  is commented and later rules win, so add new styling to whichever layer it
+  belongs to rather than mixing concerns.
+- **Quest tracker on the figure hub.** A progress bar ("X of N people met")
+  and a one-time confetti/pop celebration when the student finishes talking to
+  everyone. Driven by `justCompletedAll` in `engine/state.ts`: the reducer
+  sets it on the action that completes the figure list, and a
+  `clear-celebration` action clears it once the animation has played. Don't
+  derive "just completed" from component mount/unmount — the hub screen
+  remounts every time the student returns from a dialogue, so that state has
+  to live in the reducer, not a ref in `FigureHub`.
+- **Town map and avatar.** The student has a small customizable SVG character
+  (`components/Avatar.tsx`) that walks along the road between places on the
+  map (`components/TownMap.tsx`), with a small floating green "plumbob" above
+  it as a nod to The Sims.
+
+`git log --oneline -20` is more current than this section for exactly what
+shipped when — check it if something here seems stale.
+
 ## Run it locally
 
 ```bash
