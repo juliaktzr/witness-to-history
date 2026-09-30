@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useReducer, useState } from 'react'
-import { AppHeader } from './components/AppHeader'
+import { AppHeader, ReadAloudFloat } from './components/AppHeader'
 import { AvatarPicker } from './components/AvatarPicker'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import { SourcePanel } from './components/SourcePanel'
@@ -7,10 +7,20 @@ import { SourceViewerContext } from './components/SourceViewerContext'
 import { WarningBanner } from './components/WarningBanner'
 import { loadScenarios } from './content/loadScenarios'
 import { loadAvatarPrefs, saveAvatarPrefs, type AvatarPrefs } from './engine/avatarPrefs'
+import {
+  clearProfile,
+  loadProfile,
+  newProfile,
+  saveProfile,
+  withEraCompleted,
+  withFiguresMet,
+  type PlayerProfile,
+} from './engine/profile'
 import { initialState, reducer } from './engine/state'
 import { collectScreenText } from './speech/collectScreenText'
 import { useReadAloud } from './speech/useReadAloud'
 import { Briefing } from './screens/Briefing'
+import { CharacterScreen } from './screens/CharacterScreen'
 import { Decision } from './screens/Decision'
 import { Dialogue } from './screens/Dialogue'
 import { EraSelect } from './screens/EraSelect'
@@ -18,6 +28,10 @@ import { FigureHub } from './screens/FigureHub'
 import { Outcome } from './screens/Outcome'
 import { Reflection } from './screens/Reflection'
 import { Reveal } from './screens/Reveal'
+import { TitleScreen } from './screens/TitleScreen'
+
+/** Before the eras: the title ("login") screen, then the character dashboard. */
+type Stage = 'title' | 'character' | 'game'
 
 export default function App() {
   const scenarios = useMemo(loadScenarios, [])
@@ -28,6 +42,8 @@ export default function App() {
   const [confirmHome, setConfirmHome] = useState(false)
   const [avatarPrefs, setAvatarPrefs] = useState<AvatarPrefs>(loadAvatarPrefs)
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false)
+  const [profile, setProfile] = useState<PlayerProfile | null>(loadProfile)
+  const [stage, setStage] = useState<Stage>('title')
   const openSource = openSourceId ? scenario?.sources[openSourceId] : undefined
 
   function handleAvatarChange(next: AvatarPrefs) {
@@ -35,9 +51,30 @@ export default function App() {
     saveAvatarPrefs(next)
   }
 
+  function updateProfile(next: PlayerProfile | null) {
+    setProfile(next)
+    if (next) saveProfile(next)
+    else clearProfile()
+  }
+
+  // Record progress on the player card: people talked to, eras finished.
+  // Functional updates so these never overwrite each other.
+  const scenarioId = scenario?.id
+  const reachedReflection = screen.kind === 'reflection'
+  useEffect(() => {
+    if (!scenarioId) return
+    setProfile((p) => {
+      if (!p) return p
+      let next = withFiguresMet(p, scenarioId, state.visited)
+      if (reachedReflection) next = withEraCompleted(next, scenarioId)
+      if (next !== p) saveProfile(next)
+      return next
+    })
+  }, [scenarioId, state.visited, reachedReflection])
+
   // Read the new screen whenever it changes (or when the toggle turns on).
   // Runs after render, so the DOM already shows the new screen.
-  const screenKey = `${scenario?.id ?? ''}|${JSON.stringify(screen)}`
+  const screenKey = `${stage}|${scenario?.id ?? ''}|${JSON.stringify(screen)}`
   const { enabled, speak, stop } = readAloud
   useEffect(() => {
     if (enabled) speak(collectScreenText())
@@ -61,8 +98,42 @@ export default function App() {
     : []
 
   let body
-  if (!scenario || screen.kind === 'era-select') {
-    body = <EraSelect scenarios={scenarios} onChoose={(s) => dispatch({ type: 'choose-scenario', scenario: s })} />
+  if (stage === 'title' || !profile) {
+    body = (
+      <TitleScreen
+        profile={profile}
+        avatarPrefs={avatarPrefs}
+        onCreate={(name) => {
+          updateProfile(newProfile(name))
+          setStage('character')
+        }}
+        onContinue={() => setStage(scenario ? 'game' : 'character')}
+        onReset={() => {
+          updateProfile(null)
+          dispatch({ type: 'quit' })
+        }}
+      />
+    )
+  } else if (stage === 'character') {
+    body = (
+      <CharacterScreen
+        profile={profile}
+        avatarPrefs={avatarPrefs}
+        scenarios={scenarios}
+        onChangePrefs={handleAvatarChange}
+        onRename={(name) => updateProfile({ ...profile, name })}
+        onBegin={() => setStage('game')}
+        onTitle={() => setStage('title')}
+      />
+    )
+  } else if (!scenario || screen.kind === 'era-select') {
+    body = (
+      <EraSelect
+        scenarios={scenarios}
+        completed={profile.erasCompleted}
+        onChoose={(s) => dispatch({ type: 'choose-scenario', scenario: s })}
+      />
+    )
   } else {
     switch (screen.kind) {
       case 'briefing':
@@ -131,7 +202,17 @@ export default function App() {
 
   return (
     <SourceViewerContext.Provider value={setOpenSourceId}>
-      <AppHeader readAloud={readAloud} onHome={scenario ? () => setConfirmHome(true) : undefined} onCustomizeAvatar={() => setAvatarPickerOpen(true)} />
+      {stage === 'game' && profile && (
+        <AppHeader
+          readAloud={readAloud}
+          profile={profile}
+          avatarPrefs={avatarPrefs}
+          onHome={scenario ? () => setConfirmHome(true) : undefined}
+          // Mid-era, just open the wardrobe so the student does not lose their place.
+          onOpenProfile={() => (scenario ? setAvatarPickerOpen(true) : setStage('character'))}
+        />
+      )}
+      {stage !== 'game' && <ReadAloudFloat readAloud={readAloud} />}
       <ConfirmDialog
         open={confirmHome}
         title="Leave this era?"

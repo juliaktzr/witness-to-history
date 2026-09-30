@@ -7,10 +7,12 @@ import type { Scenario } from '../content/types'
 
 interface Props {
   scenarios: LoadedScenario[]
+  /** Scenario IDs this player has already finished. */
+  completed: string[]
   onChoose: (scenario: Scenario) => void
 }
 
-export function EraSelect({ scenarios, onChoose }: Props) {
+export function EraSelect({ scenarios, completed, onChoose }: Props) {
   return (
     <Frame kicker="Witness to History" title="Choose a moment in time">
       {scenarios.length === 0 && (
@@ -25,11 +27,14 @@ export function EraSelect({ scenarios, onChoose }: Props) {
                 <p className="kicker">
                   {scenario.era} · {scenario.year}
                 </p>
-                <h2 className="card-title">{scenario.title}</h2>
+                <h2 className="card-title">
+                  {scenario.title}
+                  {completed.includes(scenario.id) && <span className="badge"> Seal earned</span>}
+                </h2>
                 <ContentText value={scenario.location} label="location" className="muted" />
                 <ContentText value={scenario.summary} label="summary" />
                 <button type="button" className="btn btn-primary" onClick={() => onChoose(scenario)}>
-                  Travel to {scenario.year}
+                  {completed.includes(scenario.id) ? `Return to ${scenario.year}` : `Travel to ${scenario.year}`}
                 </button>
               </div>
             </li>
