@@ -115,9 +115,7 @@ export function TitleScreen({ profile, avatarPrefs, onCreate, onContinue, onRese
                 onChange={(e) => setName(e.target.value)}
               />
               <p id="traveler-name-hint" className="ledger-hint">
-                {touched && !trimmed
-                  ? 'Write a name to begin.'
-                  : 'Use a nickname, not your real name. It stays on this device only.'}
+                {touched && !trimmed ? 'Write a name to begin.' : "Enter your character's name."}
               </p>
               <button type="submit" className="btn btn-game">
                 Create your character

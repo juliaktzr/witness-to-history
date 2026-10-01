@@ -478,7 +478,9 @@ textarea {
 .app-header {
   position: sticky;
   top: 0;
-  z-index: 2;
+  /* Must beat every other in-page stacking context (map avatar, plumbob,
+     pins) so it stays the front-most thing on screen while scrolling. */
+  z-index: 50;
   display: flex;
   align-items: center;
   justify-content: space-between;
