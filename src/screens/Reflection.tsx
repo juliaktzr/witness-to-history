@@ -60,7 +60,7 @@ export function Reflection({ scenario, outcomeId, visited, playerName, onRestart
             rows={4}
             value={answers[r.id] ?? ''}
             onChange={(e) => setAnswers({ ...answers, [r.id]: e.target.value })}
-            placeholder="Type your thoughts here. They are not saved anywhere."
+            placeholder="Type your thoughts here."
           />
         </div>
       ))}
@@ -69,15 +69,19 @@ export function Reflection({ scenario, outcomeId, visited, playerName, onRestart
         save, to bring to class.
       </p>
 
-      {/* Hidden on screen; shown only when printing (see the print styles in index.css). */}
+      {/* Hidden on screen; shown only when printing, styled like an old broadsheet (see index.css). */}
       <div className="printable-summary">
-        <h1>{scenario.title}</h1>
-        <p className="print-meta">
-          {scenario.location}, {scenario.year}
-          {playerName ? ` · ${playerName}` : ''}
-        </p>
+        <header className="gazette-head">
+          <p className="gazette-kicker">
+            A Gazette of {scenario.era}, {scenario.year}
+          </p>
+          <h1 className="gazette-title">{scenario.title}</h1>
+          <p className="gazette-byline">
+            As witnessed and set down by {playerName || 'A Traveler'}, of {scenario.location}
+          </p>
+        </header>
 
-        <h2>People I talked to</h2>
+        <h2>People I Talked To</h2>
         {metFigures.length > 0 ? (
           <ul>
             {metFigures.map((f) => (
@@ -90,19 +94,19 @@ export function Reflection({ scenario, outcomeId, visited, playerName, onRestart
           <p>I did not talk to anyone before deciding.</p>
         )}
 
-        <h2>My decision</h2>
+        <h2>My Decision</h2>
         <ContentText value={scenario.decision.prompt} label="decision prompt" />
         {chosen && (
           <p>
             <strong>What I chose:</strong> {chosen.title}
           </p>
         )}
-        {chosen && <ContentText value={chosen.text} label="outcome text" />}
+        {chosen && <ContentText value={chosen.text} label="outcome text" className="print-lead" />}
 
-        <h2>What actually happened</h2>
+        <h2>What Actually Happened</h2>
         <ContentText value={scenario.reveal.text} label="historical reveal" />
 
-        <h2>My reflection</h2>
+        <h2>My Reflection</h2>
         {scenario.reflection.map((r, i) => (
           <div key={r.id} className="print-reflect-item">
             <p className="print-question">

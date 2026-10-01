@@ -1803,13 +1803,30 @@ body {
   }
 }
 
-/* ---------- Printable journey summary (Reflection screen) ---------- */
+/* ---------- Printable journey summary (Reflection screen): an old broadsheet ---------- */
 
 .printable-summary {
   display: none;
 }
 
 @media print {
+  /* Entering print re-triggers the screen's fade-in animations (opacity
+     0 -> 1), and the PDF can be captured mid-animation, printing washed-out
+     gray text instead of black. Print should never be mid-transition anyway. */
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* A fixed background-attachment (used for the parchment texture on screen)
+     repaints on top of page content in Chromium's print engine. Kill it. */
+  body {
+    background: #fff !important;
+    background-image: none !important;
+  }
+
   body * {
     visibility: hidden;
   }
@@ -1822,40 +1839,93 @@ body {
   .printable-summary {
     display: block;
     position: absolute;
-    inset: 0;
-    padding: 0.5in;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0.45in;
     background: #fff;
     color: #000;
     font-family: Georgia, 'Times New Roman', serif;
+    column-count: 2;
+    column-gap: 0.4in;
+    column-rule: 1px solid #000;
+    text-align: justify;
+    hyphens: auto;
   }
 
-  .printable-summary h1 {
-    font-size: 1.6rem;
-    margin: 0 0 0.2rem;
+  .printable-summary .gazette-head {
+    column-span: all;
+    text-align: center;
+    margin: 0 0 0.3rem;
+    border-bottom: 4px double #000;
+    padding-bottom: 0.3rem;
+  }
+
+  .printable-summary .gazette-kicker {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .printable-summary .gazette-title {
+    margin: 0.15rem 0;
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 2.3rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+  }
+
+  .printable-summary .gazette-byline {
+    margin: 0;
+    font-size: 0.8rem;
+    font-style: italic;
   }
 
   .printable-summary h2 {
-    font-size: 1.05rem;
-    margin: 1.1rem 0 0.3rem;
+    column-span: all;
+    margin: 1rem 0 0.4rem;
+    border-top: 1px solid #000;
     border-bottom: 1px solid #000;
-    padding-bottom: 0.15rem;
+    padding: 0.2rem 0;
+    font-size: 0.95rem;
+    font-variant: small-caps;
+    letter-spacing: 0.08em;
+    text-align: center;
   }
 
-  .printable-summary .print-meta {
-    margin: 0 0 0.6rem;
-    font-family: system-ui, sans-serif;
-    font-size: 0.85rem;
-    color: #333;
+  .printable-summary p {
+    margin: 0 0 0.5rem;
+    break-inside: avoid-column;
   }
 
   .printable-summary ul {
     margin: 0 0 0.4rem;
     padding-left: 1.2rem;
+    break-inside: avoid-column;
+  }
+
+  .printable-summary .print-lead::first-letter {
+    float: left;
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 2.8em;
+    line-height: 0.85;
+    padding: 0.03em 0.08em 0 0;
+  }
+
+  .printable-summary .print-reflect-item {
+    break-inside: avoid-column;
+    margin: 0 0 0.5rem;
   }
 
   .printable-summary .print-question {
     margin: 0.6rem 0 0.15rem;
     font-weight: 700;
+    text-align: left;
   }
 
   .printable-summary .print-answer {
@@ -1863,6 +1933,7 @@ body {
     padding: 0.3rem 0.5rem;
     border-left: 3px solid #999;
     white-space: pre-line;
+    text-align: left;
   }
 
   .printable-summary .placeholder {
@@ -1873,7 +1944,7 @@ body {
   }
 
   @page {
-    margin: 0.5in;
+    margin: 0.4in;
   }
 }
 
