@@ -1801,6 +1801,80 @@ body {
   }
 }
 
+/* ---------- Printable journey summary (Reflection screen) ---------- */
+
+.printable-summary {
+  display: none;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .printable-summary,
+  .printable-summary * {
+    visibility: visible;
+  }
+
+  .printable-summary {
+    display: block;
+    position: absolute;
+    inset: 0;
+    padding: 0.5in;
+    background: #fff;
+    color: #000;
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+
+  .printable-summary h1 {
+    font-size: 1.6rem;
+    margin: 0 0 0.2rem;
+  }
+
+  .printable-summary h2 {
+    font-size: 1.05rem;
+    margin: 1.1rem 0 0.3rem;
+    border-bottom: 1px solid #000;
+    padding-bottom: 0.15rem;
+  }
+
+  .printable-summary .print-meta {
+    margin: 0 0 0.6rem;
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+    color: #333;
+  }
+
+  .printable-summary ul {
+    margin: 0 0 0.4rem;
+    padding-left: 1.2rem;
+  }
+
+  .printable-summary .print-question {
+    margin: 0.6rem 0 0.15rem;
+    font-weight: 700;
+  }
+
+  .printable-summary .print-answer {
+    margin: 0 0 0.4rem;
+    padding: 0.3rem 0.5rem;
+    border-left: 3px solid #999;
+    white-space: pre-line;
+  }
+
+  .printable-summary .placeholder {
+    border: none;
+    background: none;
+    color: #000;
+    font-style: italic;
+  }
+
+  @page {
+    margin: 0.5in;
+  }
+}
+
 /* =====================================================================
    Game shell: title ("login") screen and character dashboard.
    Candlelit night, brass, and wax seals: a game menu that still feels

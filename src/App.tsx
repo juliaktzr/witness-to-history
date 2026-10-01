@@ -192,6 +192,8 @@ export default function App() {
           <Reflection
             scenario={scenario}
             outcomeId={screen.outcomeId}
+            visited={state.visited}
+            playerName={profile?.name}
             onRestart={() => dispatch({ type: 'restart' })}
             onQuit={() => dispatch({ type: 'quit' })}
           />
