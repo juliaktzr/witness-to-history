@@ -49,7 +49,7 @@
         "src_port_act"
       ],
       "image": {
-        "src": "https://tile.loc.gov/image-services/iiif/service:gmd:gmd372:g3720:g3720:ar080000/full/!1400,1400/0/default.jpg",
+        "src": "images/rev_1775_boycott/new-england-map-1774.jpg",
         "alt": "A hand-colored 1774 map of New England showing Massachusetts, New Hampshire, Connecticut and Rhode Island, with the Atlantic coast on the right."
       },
       "marker": {
