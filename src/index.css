@@ -4208,3 +4208,25 @@ body {
     box-shadow: 0 0 0 4px rgba(255, 207, 122, 0.35);
   }
 }
+
+/* Start over: set apart from the other menu items, in wax red, so it is not tapped by accident. */
+.rail-btn-danger {
+  margin-top: 0.6rem;
+  border-top: 1px solid var(--panel-line);
+  border-radius: 0 0 10px 10px;
+  color: #f0a08c;
+}
+
+.rail-btn-danger:hover {
+  color: #ffd2c4;
+  background: rgba(155, 44, 23, 0.3);
+}
+
+@media (max-width: 36rem) {
+  .rail-btn-danger {
+    margin-top: 0;
+    border-top: 0;
+    border-left: 1px solid var(--panel-line);
+    border-radius: 0 10px 10px 0;
+  }
+}

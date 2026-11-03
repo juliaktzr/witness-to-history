@@ -6,7 +6,7 @@ import { SourcePanel } from './components/SourcePanel'
 import { SourceViewerContext } from './components/SourceViewerContext'
 import { WarningBanner } from './components/WarningBanner'
 import { loadScenarios } from './content/loadScenarios'
-import { loadAvatarPrefs, saveAvatarPrefs, type AvatarPrefs } from './engine/avatarPrefs'
+import { DEFAULT_PREFS, clearAvatarPrefs, loadAvatarPrefs, saveAvatarPrefs, type AvatarPrefs } from './engine/avatarPrefs'
 import {
   clearProfile,
   loadProfile,
@@ -55,6 +55,17 @@ export default function App() {
     setProfile(next)
     if (next) saveProfile(next)
     else clearProfile()
+  }
+
+  /** Wipe everything saved on this device and go back to the title screen. */
+  function startOver() {
+    updateProfile(null)
+    clearAvatarPrefs()
+    setAvatarPrefs(DEFAULT_PREFS)
+    setOpenSourceId(null)
+    setAvatarPickerOpen(false)
+    dispatch({ type: 'quit' })
+    setStage('title')
   }
 
   // Record progress on the player card: people talked to, eras finished.
@@ -108,10 +119,7 @@ export default function App() {
           setStage('character')
         }}
         onContinue={() => setStage(scenario ? 'game' : 'character')}
-        onReset={() => {
-          updateProfile(null)
-          dispatch({ type: 'quit' })
-        }}
+        onReset={startOver}
       />
     )
   } else if (stage === 'character') {
@@ -124,6 +132,7 @@ export default function App() {
         onRename={(name) => updateProfile({ ...profile, name })}
         onBegin={() => setStage('game')}
         onTitle={() => setStage('title')}
+        onStartOver={startOver}
       />
     )
   } else if (!scenario || screen.kind === 'era-select') {

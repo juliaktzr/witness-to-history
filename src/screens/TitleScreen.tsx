@@ -136,7 +136,7 @@ export function TitleScreen({ profile, avatarPrefs, onCreate, onContinue, onRese
           onReset()
         }}
       >
-        <p>This clears the name, level, and seals saved on this device.</p>
+        <p>This clears the name, level, seals, and outfit saved on this device.</p>
       </ConfirmDialog>
     </main>
   )

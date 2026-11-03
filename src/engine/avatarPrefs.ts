@@ -129,6 +129,16 @@ export function saveAvatarPrefs(prefs: AvatarPrefs): void {
   }
 }
 
+/** Forget the saved character look (both save versions). */
+export function clearAvatarPrefs(): void {
+  try {
+    localStorage.removeItem(KEY)
+    localStorage.removeItem(OLD_KEY)
+  } catch {
+    /* nothing to clear */
+  }
+}
+
 function pick<T>(list: readonly T[]): T {
   return list[Math.floor(Math.random() * list.length)]
 }
