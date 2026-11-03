@@ -4449,3 +4449,27 @@ body {
     white-space: nowrap;
   }
 }
+
+/* One small "these people are made up" note under the hub's list of people. */
+@media screen {
+  .frame .composite-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    padding: 0.6rem 0.9rem;
+    font-family: system-ui, sans-serif;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--vellum-muted);
+    border: 1px dashed var(--panel-line);
+    border-radius: 12px;
+  }
+
+  .composite-note-icon {
+    flex: none;
+    font-size: 1rem;
+    line-height: 1.1;
+    color: var(--gold);
+  }
+}
