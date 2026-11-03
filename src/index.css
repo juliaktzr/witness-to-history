@@ -4168,6 +4168,22 @@ body {
     }
   }
 
+  /* Phone map: compact pins and labels so they fit side by side. */
+  @media (max-width: 30rem) {
+    .frame .pin {
+      min-height: 1.9rem;
+      padding: 0.15rem 0.45rem;
+      font-size: 0.68rem;
+      letter-spacing: 0;
+      border-radius: 8px;
+    }
+
+    .frame .place-label {
+      font-size: 0.58rem;
+      padding: 0.05rem 0.35rem;
+    }
+  }
+
   @media (max-width: 30rem) {
     .frame .speech {
       align-items: stretch;

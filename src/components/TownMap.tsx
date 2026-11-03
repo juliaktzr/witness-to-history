@@ -171,8 +171,15 @@ function useNudgedPins(deps: unknown[]) {
         }
         const maxRight = host.right - 4 - b.r
         const maxLeft = host.left + 4 - b.l // negative or zero
+        // Moving left must not land this pin on another pin already placed.
+        const leftIsClear = boxes.slice(0, i).every((a) => {
+          const vertical = a.t < b.b && b.t < a.b
+          const aLeft = a.l + (next[a.id] ?? 0)
+          const aRight = a.r + (next[a.id] ?? 0)
+          return !vertical || b.r + leftShift < aLeft - 6 || b.l + leftShift > aRight + 6
+        })
         // Prefer moving right; if there is no room, move left instead.
-        next[b.id] = shift <= maxRight ? shift : leftShift >= maxLeft ? leftShift : Math.max(0, maxRight)
+        next[b.id] = shift <= maxRight ? shift : leftShift >= maxLeft && leftIsClear ? leftShift : Math.max(0, maxRight)
       }
       setDx((cur) => (JSON.stringify(cur) === JSON.stringify(next) ? cur : next))
     }
@@ -183,6 +190,15 @@ function useNudgedPins(deps: unknown[]) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
   return { ref, dx }
+}
+
+/**
+ * Where the character stands for a place, in map percent: on the road, just
+ * left of the doorstep, kept far enough from the edges that the character and
+ * its "you are here" ring stay fully on the map.
+ */
+function standPos(p: MapPlace) {
+  return { x: Math.min(95, Math.max(5, p.x - 3.5)), y: ((sy(p.y) + 3) / H) * 100 }
 }
 
 /** Walking speed: milliseconds per SVG unit of road, clamped to a comfortable range. */
@@ -201,8 +217,7 @@ function useWalker(
   onArrive?: (placeId: string) => void,
 ) {
   const findPlace = (id: string | null) => places.find((p) => p.id === id)
-  /** Where the character stands for a place: on the road, just left of the doorstep. */
-  const toPos = (p: MapPlace | undefined) => (p ? { x: Math.max(2, p.x - 3.5), y: ((sy(p.y) + 3) / H) * 100 } : null)
+  const toPos = (p: MapPlace | undefined) => (p ? standPos(p) : null)
   const [pos, setPos] = useState(() => toPos(findPlace(targetId)))
   const [walking, setWalking] = useState(false)
   const [facing, setFacing] = useState<'left' | 'right'>('right')
@@ -321,14 +336,22 @@ export function TownMap({ map, figures, visited, avatarPlace, avatarPrefs, onArr
           </g>
         ))}
         {here && (
-          <g transform={`translate(${here.x} ${sy(here.y) + 3})`}>
-            <ellipse cx={0} cy={0} rx={9} ry={2.8} fill="none" stroke="#0b57d0" strokeWidth={0.6} strokeDasharray="1.5 1" />
+          // Ring at the character's feet, so it is centered on them.
+          <g transform={`translate(${standPos(here).x} ${(standPos(here).y / 100) * H})`}>
+            <ellipse cx={0} cy={0} rx={3.6} ry={1.3} fill="#4ee85a" fillOpacity={0.3} stroke="#1f8a2a" strokeWidth={0.45} strokeDasharray="1.2 0.8" />
           </g>
         )}
       </svg>
 
       {places.map((p) => (
-        <span key={p.id} className="place-label" style={{ left: `clamp(3.4rem, ${p.x}%, calc(100% - 3.4rem))`, top: `min(${p.y + 6}%, calc(100% - 1.6rem))` }} aria-hidden="true">
+        // Shifting the label left by x% of its own width keeps any label fully
+        // on the map: centered in the middle, left-aligned near the left edge.
+        <span
+          key={p.id}
+          className="place-label"
+          style={{ left: `${p.x}%`, top: `min(${p.y + 6}%, calc(100% - 1.6rem))`, transform: `translateX(-${p.x}%)` }}
+          aria-hidden="true"
+        >
           {isPlaceholder(p.label) ? 'Place name coming soon' : p.label}
           {here?.id === p.id && <span className="place-here"> You are here</span>}
         </span>
