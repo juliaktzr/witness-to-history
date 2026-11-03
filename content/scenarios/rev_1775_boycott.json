@@ -412,6 +412,126 @@
       "excerpt": ""
     }
   },
+  "glossary": [
+    {
+      "id": "parliament",
+      "term": "Parliament",
+      "aliases": [],
+      "definition": "Britain's lawmaking body. People in the American colonies could not elect anyone to it, so many said its laws for them were unfair.",
+      "sources": [
+        "src_port_act"
+      ]
+    },
+    {
+      "id": "association",
+      "term": "Continental Association",
+      "aliases": [
+        "the Association",
+        "Association",
+        "agreement"
+      ],
+      "definition": "The agreement signed in October 1774 by delegates from twelve colonies. They promised to stop bringing in goods from Britain starting December 1, 1774, and to elect committees in every town to enforce it.",
+      "sources": [
+        "src_association"
+      ]
+    },
+    {
+      "id": "boycott",
+      "term": "boycott",
+      "aliases": [
+        "boycotts"
+      ],
+      "definition": "Refusing to buy from or trade with someone as a protest. The word was invented later, in 1880, but it describes what the colonists did.",
+      "sources": []
+    },
+    {
+      "id": "committee",
+      "term": "committee of inspection",
+      "aliases": [
+        "committee",
+        "committees"
+      ],
+      "definition": "A group elected by a town's voters to watch who bought and sold British goods. If someone broke the agreement, the committee printed their name in the newspaper.",
+      "sources": [
+        "src_association"
+      ]
+    },
+    {
+      "id": "correspondence",
+      "term": "Committee of Correspondence",
+      "aliases": [
+        "Committees of Correspondence"
+      ],
+      "definition": "A group that shared news and plans with other towns and colonies by writing letters. Boston started one in 1772.",
+      "sources": []
+    },
+    {
+      "id": "delegates",
+      "term": "delegates",
+      "aliases": [
+        "delegate"
+      ],
+      "definition": "People chosen to go to a meeting and speak and vote for the place they come from.",
+      "sources": []
+    },
+    {
+      "id": "port",
+      "term": "port",
+      "aliases": [
+        "ports"
+      ],
+      "definition": "A town with a harbor where ships load and unload goods. Closing Boston's port stopped most of its trade by sea.",
+      "sources": [
+        "src_port_act"
+      ]
+    },
+    {
+      "id": "import",
+      "term": "imports",
+      "aliases": [
+        "import",
+        "imported",
+        "importing"
+      ],
+      "definition": "Goods brought in from another country to sell.",
+      "sources": []
+    },
+    {
+      "id": "east_india",
+      "term": "East India Company",
+      "aliases": [],
+      "definition": "A large British trading company. In December 1773, protesters in Boston dumped its tea into the harbor.",
+      "sources": [
+        "src_port_act"
+      ]
+    },
+    {
+      "id": "repeal",
+      "term": "repeal",
+      "aliases": [
+        "repealed",
+        "repeals"
+      ],
+      "definition": "To cancel a law.",
+      "sources": []
+    },
+    {
+      "id": "lexington",
+      "term": "Lexington and Concord",
+      "aliases": [],
+      "definition": "Two Massachusetts towns where fighting between colonists and British soldiers began on April 19, 1775.",
+      "sources": []
+    },
+    {
+      "id": "colonies",
+      "term": "colonies",
+      "aliases": [
+        "colony"
+      ],
+      "definition": "Places settled and ruled by another country. Thirteen of Britain's colonies along the Atlantic coast later became the United States.",
+      "sources": []
+    }
+  ],
   "coverImage": {
     "src": "images/rev_1775_boycott/bostonians-in-distress-1774.jpg",
     "alt": "A 1774 satirical print. Several Bostonians are locked in a cage hanging from a tree while British soldiers and cannons surround them. People below pass fish up to the cage on poles."

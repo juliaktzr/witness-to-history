@@ -1,15 +1,15 @@
 # Content templates
 
-Nine CSV files, one per tab of the content sheet. Each has only a header row.
-Column meanings are in `CONTENT_SCHEMA.md` at the top of the repo. The
-**Places** tab is optional: leave it out and the game shows the people as a
-plain list instead of a town map.
+Ten CSV files, one per tab of the content sheet. Each has only a header row.
+Column meanings are in `CONTENT_SCHEMA.md` at the top of the repo. Two tabs are
+optional. Leave out **Places** and the game shows the people as a plain list
+instead of a town map. Leave out **Glossary** and no words are underlined.
 
 ## Setting up the Google Sheet
 
 1. Make a new Google Sheet. Rename the first tab **Scenario**.
 2. Add tabs named exactly: **Briefing**, **Figures**, **Dialogue**, **Decision**,
-   **Outcomes**, **Reveal and Reflection**, **Sources**, and optionally **Places**.
+   **Outcomes**, **Reveal and Reflection**, **Sources**, and optionally **Places** and **Glossary**.
 3. For each tab: File > Import > Upload the matching CSV here > Import location
    "Replace current sheet". That fills in the header row.
 4. Write content in the rows below the headers. Write `TODO` in any cell you

@@ -4,9 +4,12 @@ import { AppHeader, FloatingMenu } from './components/AppHeader'
 import { AvatarPicker } from './components/AvatarPicker'
 import { ConfirmDialog } from './components/ConfirmDialog'
 import type { MenuItem } from './components/GameMenu'
+import { GlossaryContext } from './components/GlossaryContext'
+import { GlossaryDialog } from './components/GlossaryDialog'
 import { SourcePanel } from './components/SourcePanel'
 import { SourceViewerContext } from './components/SourceViewerContext'
 import { WarningBanner } from './components/WarningBanner'
+import { buildMatcher } from './content/glossary'
 import { loadScenarios } from './content/loadScenarios'
 import { DEFAULT_PREFS, clearAvatarPrefs, loadAvatarPrefs, saveAvatarPrefs, type AvatarPrefs } from './engine/avatarPrefs'
 import {
@@ -44,11 +47,14 @@ export default function App() {
   const [confirmHome, setConfirmHome] = useState(false)
   const [confirmStartOver, setConfirmStartOver] = useState(false)
   const [aboutOpen, setAboutOpen] = useState(false)
+  const [termId, setTermId] = useState<string | null>(null)
   const [avatarPrefs, setAvatarPrefs] = useState<AvatarPrefs>(loadAvatarPrefs)
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false)
   const [profile, setProfile] = useState<PlayerProfile | null>(loadProfile)
   const [stage, setStage] = useState<Stage>('title')
   const openSource = openSourceId ? scenario?.sources[openSourceId] : undefined
+  const openEntry = termId ? scenario?.glossary?.find((g) => g.id === termId) : undefined
+  const glossary = useMemo(() => ({ matcher: buildMatcher(scenario?.glossary), openTerm: setTermId }), [scenario])
 
   function handleAvatarChange(next: AvatarPrefs) {
     setAvatarPrefs(next)
@@ -67,6 +73,7 @@ export default function App() {
     clearAvatarPrefs()
     setAvatarPrefs(DEFAULT_PREFS)
     setOpenSourceId(null)
+    setTermId(null)
     setAvatarPickerOpen(false)
     dispatch({ type: 'quit' })
     setStage('title')
@@ -99,13 +106,14 @@ export default function App() {
   // Read a dialog (source record or question) when it opens; go back to silence when it closes.
   useEffect(() => {
     if (!enabled) return
-    if (openSourceId || confirmHome || confirmStartOver || aboutOpen) speak(collectScreenText(document.querySelector('dialog[open]') ?? undefined))
+    if (openSourceId || termId || confirmHome || confirmStartOver || aboutOpen) speak(collectScreenText(document.querySelector('dialog[open]') ?? undefined))
     else stop()
-  }, [enabled, openSourceId, confirmHome, confirmStartOver, aboutOpen, speak, stop])
+  }, [enabled, openSourceId, termId, confirmHome, confirmStartOver, aboutOpen, speak, stop])
 
-  // Leaving the scenario closes any open panel.
+  // Leaving or switching the scenario closes any open panel.
   useEffect(() => {
-    if (!scenario) setOpenSourceId(null)
+    setOpenSourceId(null)
+    setTermId(null)
   }, [scenario])
 
   const warnings = scenario
@@ -245,56 +253,59 @@ export default function App() {
 
   return (
     <SourceViewerContext.Provider value={setOpenSourceId}>
-      {stage === 'game' && profile && (
-        <AppHeader
-          profile={profile}
-          avatarPrefs={avatarPrefs}
-          menuItems={menuItems}
-          menuIndicator={menuIndicator}
-          // Mid-era, just open the wardrobe so the student does not lose their place.
-          onOpenProfile={() => (scenario ? setAvatarPickerOpen(true) : setStage('character'))}
-        />
-      )}
-      {stage !== 'game' && menuItems.length > 0 && <FloatingMenu items={menuItems} indicator={menuIndicator} />}
-      <ConfirmDialog
-        open={confirmStartOver}
-        title="Start over completely?"
-        confirmLabel="Start over"
-        cancelLabel="Keep my character"
-        onCancel={() => setConfirmStartOver(false)}
-        onConfirm={() => {
-          setConfirmStartOver(false)
-          startOver()
-        }}
-      >
-        <p>This clears your name, level, seals, and outfit on this device. You cannot undo it.</p>
-      </ConfirmDialog>
-      <ConfirmDialog
-        open={confirmHome}
-        title="Leave this era?"
-        confirmLabel="Go home"
-        cancelLabel="Stay"
-        onCancel={() => setConfirmHome(false)}
-        onConfirm={() => {
-          setConfirmHome(false)
-          setOpenSourceId(null)
-          dispatch({ type: 'quit' })
-        }}
-      >
-        <p>You will go back to the era menu. Your progress in this era is not saved.</p>
-      </ConfirmDialog>
-      <AvatarPicker open={avatarPickerOpen} prefs={avatarPrefs} onChange={handleAvatarChange} onClose={() => setAvatarPickerOpen(false)} />
-      <WarningBanner warnings={warnings} />
-      {body}
-      {stage === 'game' && (
-        <footer className="game-footer">
-          <button type="button" className="link-button" onClick={() => setAboutOpen(true)}>
-            About this game
-          </button>
-        </footer>
-      )}
-      <AboutDialog open={aboutOpen} scenario={scenario ?? null} onClose={() => setAboutOpen(false)} />
-      <SourcePanel sourceId={openSourceId} source={openSource} onClose={() => setOpenSourceId(null)} />
+      <GlossaryContext.Provider value={glossary}>
+        {stage === 'game' && profile && (
+          <AppHeader
+            profile={profile}
+            avatarPrefs={avatarPrefs}
+            menuItems={menuItems}
+            menuIndicator={menuIndicator}
+            // Mid-era, just open the wardrobe so the student does not lose their place.
+            onOpenProfile={() => (scenario ? setAvatarPickerOpen(true) : setStage('character'))}
+          />
+        )}
+        {stage !== 'game' && menuItems.length > 0 && <FloatingMenu items={menuItems} indicator={menuIndicator} />}
+        <ConfirmDialog
+          open={confirmStartOver}
+          title="Start over completely?"
+          confirmLabel="Start over"
+          cancelLabel="Keep my character"
+          onCancel={() => setConfirmStartOver(false)}
+          onConfirm={() => {
+            setConfirmStartOver(false)
+            startOver()
+          }}
+        >
+          <p>This clears your name, level, seals, and outfit on this device. You cannot undo it.</p>
+        </ConfirmDialog>
+        <ConfirmDialog
+          open={confirmHome}
+          title="Leave this era?"
+          confirmLabel="Go home"
+          cancelLabel="Stay"
+          onCancel={() => setConfirmHome(false)}
+          onConfirm={() => {
+            setConfirmHome(false)
+            setOpenSourceId(null)
+            dispatch({ type: 'quit' })
+          }}
+        >
+          <p>You will go back to the era menu. Your progress in this era is not saved.</p>
+        </ConfirmDialog>
+        <AvatarPicker open={avatarPickerOpen} prefs={avatarPrefs} onChange={handleAvatarChange} onClose={() => setAvatarPickerOpen(false)} />
+        <WarningBanner warnings={warnings} />
+        {body}
+        {stage === 'game' && (
+          <footer className="game-footer">
+            <button type="button" className="link-button" onClick={() => setAboutOpen(true)}>
+              About this game
+            </button>
+          </footer>
+        )}
+        <AboutDialog open={aboutOpen} scenario={scenario ?? null} onClose={() => setAboutOpen(false)} />
+        <GlossaryDialog entry={openEntry} scenario={scenario ?? null} onClose={() => setTermId(null)} />
+        <SourcePanel sourceId={openSourceId} source={openSource} onClose={() => setOpenSourceId(null)} />
+        </GlossaryContext.Provider>
     </SourceViewerContext.Provider>
   )
 }

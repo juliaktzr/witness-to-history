@@ -44,7 +44,7 @@ export function Dialogue({ scenario, figureId, nodeId, onChoice, onLeave }: Prop
           <span className="speaker-plinth" aria-hidden="true" />
         </div>
         <div className="speech-bubble">
-          <ContentText value={node.text} label="what they say" className="lead" />
+          <ContentText value={node.text} label="what they say" className="lead" terms />
           <SourceList ids={node.sources} scenario={scenario} />
         </div>
       </div>

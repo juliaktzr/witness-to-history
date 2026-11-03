@@ -217,5 +217,28 @@ export function validateScenario(raw: unknown): ValidationResult {
     if (isPlaceholder(src.url)) warn(`sources.${id}.url`, 'Archive link is unfinished.')
   }
 
+  // --- Glossary (optional)
+  if (s.glossary != null) {
+    if (!Array.isArray(s.glossary)) {
+      err('glossary', 'The glossary must be a list of terms.')
+    } else {
+      const seen = new Map<string, string>()
+      s.glossary.forEach((g, i) => {
+        const p = `glossary[${g?.id ?? i}]`
+        checkText(`${p}.term`, g.term)
+        checkText(`${p}.definition`, g.definition)
+        checkSources(`${p}.sources`, g.sources)
+        if (!Array.isArray(g.aliases)) err(`${p}.aliases`, 'Other forms must be a list.')
+        for (const phrase of [g.term, ...(Array.isArray(g.aliases) ? g.aliases : [])]) {
+          if (typeof phrase !== 'string' || isPlaceholder(phrase)) continue
+          const key = phrase.trim().toLowerCase()
+          const other = seen.get(key)
+          if (other && other !== g.id) warn(`${p}.term`, `"${phrase}" is also listed under "${other}". Only the first one is used.`)
+          else seen.set(key, g.id)
+        }
+      })
+    }
+  }
+
   return { errors, warnings }
 }

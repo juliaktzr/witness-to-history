@@ -23,7 +23,7 @@ export function Outcome({ scenario, outcomeId, onNext }: Props) {
       }
     >
       <div className="parchment">
-        <ContentText value={outcome?.text} label="outcome text" className="lead drop-cap" />
+        <ContentText value={outcome?.text} label="outcome text" className="lead drop-cap" terms />
         {outcome && <SourceList ids={outcome.sources} scenario={scenario} />}
       </div>
     </Frame>

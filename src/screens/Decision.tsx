@@ -25,7 +25,7 @@ export function Decision({ scenario, onDecide, onBack }: Props) {
     >
       <div className="callout parchment">
         <p className="callout-label">What you know, and what you do not</p>
-        <ContentText value={decision.context} label="decision context" />
+        <ContentText value={decision.context} label="decision context" terms />
       </div>
       <h2 className="section-heading">Pick one</h2>
       <ul className="choice-list decision-list">

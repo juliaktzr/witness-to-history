@@ -50,7 +50,7 @@ export function Briefing({ scenario, index, onNext, onBack }: Props) {
         ))}
       </ol>
       <div className="parchment">
-        <ContentText value={screen.text} label="briefing text" className="lead drop-cap" />
+        <ContentText value={screen.text} label="briefing text" className="lead drop-cap" terms />
         <SourceList ids={screen.sources} scenario={scenario} />
       </div>
     </Frame>

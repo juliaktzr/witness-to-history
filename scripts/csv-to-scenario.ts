@@ -20,6 +20,7 @@ import type {
   DialogueChoice,
   DialogueNode,
   Figure,
+  GlossaryEntry,
   MapPlace,
   Outcome,
   PlaceKind,
@@ -78,7 +79,7 @@ function parseCsv(text: string): string[][] {
 // Sheet model
 // ---------------------------------------------------------------------------
 
-type TabKey = 'scenario' | 'briefing' | 'figures' | 'dialogue' | 'decision' | 'outcomes' | 'reveal' | 'sources' | 'places'
+type TabKey = 'scenario' | 'briefing' | 'figures' | 'dialogue' | 'decision' | 'outcomes' | 'reveal' | 'sources' | 'places' | 'glossary'
 
 const TAB_NAMES: Record<TabKey, string> = {
   scenario: 'Scenario',
@@ -90,10 +91,11 @@ const TAB_NAMES: Record<TabKey, string> = {
   reveal: 'Reveal and Reflection',
   sources: 'Sources',
   places: 'Places',
+  glossary: 'Glossary',
 }
 
 /** Tabs a scenario can leave out entirely. */
-const OPTIONAL_TABS: TabKey[] = ['places']
+const OPTIONAL_TABS: TabKey[] = ['places', 'glossary']
 
 const REQUIRED_COLUMNS: Record<TabKey, string[]> = {
   scenario: ['id', 'title', 'era', 'year', 'location', 'summary'],
@@ -105,6 +107,7 @@ const REQUIRED_COLUMNS: Record<TabKey, string[]> = {
   reveal: ['type', 'id', 'text'],
   sources: ['id', 'title', 'creator', 'date', 'type', 'url'],
   places: ['id', 'label', 'kind', 'x', 'y'],
+  glossary: ['id', 'term', 'definition'],
 }
 
 interface Row {
@@ -251,7 +254,7 @@ function indexIds(tab: Tab) {
 // ---------------------------------------------------------------------------
 
 function build(t: Record<TabKey, Tab>): Scenario {
-  for (const key of ['briefing', 'figures', 'dialogue', 'outcomes', 'sources', 'places'] as const) if (!t[key].absent) indexIds(t[key])
+  for (const key of ['briefing', 'figures', 'dialogue', 'outcomes', 'sources', 'places', 'glossary'] as const) if (!t[key].absent) indexIds(t[key])
 
   // Scenario (one row)
   if (t.scenario.rows.length === 0) {
@@ -318,6 +321,20 @@ function build(t: Record<TabKey, Tab>): Scenario {
     if (hereRows.length > 1) warnings.push({ tab: 'Places', row: hereRows[1].n, column: 'you_are_here', message: 'Only one place can be "you are here". The first is used.' })
     map = { places }
     if (hereRows[0]) map.here = hereRows[0].cells.id
+  }
+
+  // Glossary (optional tab) -> tap-to-explain terms
+  let glossary: GlossaryEntry[] | undefined
+  if (!t.glossary.absent) {
+    glossary = t.glossary.rows
+      .filter((r) => r.cells.id)
+      .map((r) => ({
+        id: r.cells.id,
+        term: r.cells.term ?? '',
+        aliases: (r.cells.also_matches ?? '').split(',').map((a) => a.trim()).filter(Boolean),
+        definition: r.cells.definition ?? '',
+        sources: splitIds(r.cells.sources),
+      }))
   }
 
   // Dialogue: any number of choice_N_text / choice_N_next column pairs
@@ -401,6 +418,7 @@ function build(t: Record<TabKey, Tab>): Scenario {
     reveal: { text: revealRow?.cells.text ?? '', sources: splitIds(revealRow?.cells.sources) },
     reflection,
     sources,
+    ...(glossary ? { glossary } : {}),
   }
   const cover = imageOrUndefined(s.cells.cover_image, s.cells.cover_image_alt)
   if (cover) scenario.coverImage = cover
@@ -427,6 +445,7 @@ const COLUMN_NAMES: Record<string, string> = {
   'marker.y': 'marker_y',
   'marker.label': 'marker_label',
   marker: 'marker_x',
+  aliases: 'also_matches',
 }
 
 function locate(issue: ValidationIssue): Problem {
@@ -440,6 +459,8 @@ function locate(issue: ValidationIssue): Problem {
   if (path === 'briefing') return { tab: 'Briefing', message }
   if ((m = path.match(/^figures\[(.+?)\]\.(.+)$/))) return { tab: 'Figures', row: rowIndex.figures?.get(m[1]), id: m[1], column: col(m[2]), message }
   if (path === 'figures') return { tab: 'Figures', message }
+  if ((m = path.match(/^glossary\[(.+?)\]\.(.+)$/))) return { tab: 'Glossary', row: rowIndex.glossary?.get(m[1]), id: m[1], column: col(m[2]), message }
+  if (path === 'glossary') return { tab: 'Glossary', message }
   if ((m = path.match(/^places\[(.+?)\]\.(.+)$/))) return { tab: 'Places', row: rowIndex.places?.get(m[1]), id: m[1], column: m[2], message }
   if (path === 'map.here') return { tab: 'Places', column: 'you_are_here', message }
   if (path === 'map') return { tab: 'Places', message }
@@ -524,7 +545,7 @@ function main() {
   mkdirSync(dirname(out), { recursive: true })
   writeFileSync(out, JSON.stringify(scenario, null, 2) + '\n')
   console.log(`✔ Wrote ${out}`)
-  console.log(`  ${scenario.briefing.length} briefing screens, ${scenario.figures.length} figures, ${Object.keys(scenario.dialogue).length} dialogue lines, ${scenario.decision.options.length} decision options, ${Object.keys(scenario.sources).length} sources.`)
+  console.log(`  ${scenario.briefing.length} briefing screens, ${scenario.figures.length} figures, ${Object.keys(scenario.dialogue).length} dialogue lines, ${scenario.decision.options.length} decision options, ${Object.keys(scenario.sources).length} sources${scenario.glossary ? `, ${scenario.glossary.length} glossary terms` : ''}.`)
   if (warnings.length === 0) console.log('  No unfinished items. Nice work.')
 }
 

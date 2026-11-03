@@ -113,6 +113,18 @@ When this tab exists, the "talk to figures" hub draws a simple illustrated town 
 | url | Link to the archive page |
 | excerpt | Short excerpt students can read (optional, public domain only) |
 
+### 10. Glossary (optional, one row per word students might not know)
+The game underlines these words in briefing, dialogue, decision, outcome, and reveal text. Tapping one shows the definition. Only the first time a word appears in each block of text is underlined. Matching ignores capital letters and only matches whole words.
+| Column | What to write |
+|---|---|
+| id | `parliament`, `association` ... |
+| term | The word as it should appear as the title, e.g. Continental Association |
+| also_matches | Optional. Other forms that should open the same definition, separated by commas, e.g. `the Association, Association, agreement` |
+| definition | One or two short sentences at a 12-year-old reading level |
+| sources | Optional. Source IDs the definition is based on, separated by commas |
+
+Longer phrases win over shorter ones, so `Committee of Correspondence` can have its own row even though `committee` is listed under another term.
+
 ## JSON shape (for the CS team)
 The converter (`npm run convert -- <folder-of-csvs>`, see `content/templates/README.md`) turns the sheet into this structure. See `content/scenarios/rev_1775_boycott.json` for a full example.
 
@@ -158,7 +170,11 @@ The converter (`npm run convert -- <folder-of-csvs>`, see `content/templates/REA
   "sources": {
     "srcId": { "title": "string", "creator": "string", "date": "string",
       "type": "document", "url": "string", "excerpt": "string" }
-  }
+  },
+  "glossary": [
+    { "id": "string", "term": "string", "aliases": ["string"],
+      "definition": "string", "sources": ["srcId"] }
+  ]
 }
 ```
 
@@ -168,3 +184,4 @@ The converter (`npm run convert -- <folder-of-csvs>`, see `content/templates/REA
 - No text field is empty; `TODO` values are flagged in a visible warning banner
 - Every image has alt text
 - Every figure `place` and the map's `here` point to a row in Places; positions are 0 to 100
+- Glossary terms and definitions are filled in and their sources exist; a word listed under two terms is flagged

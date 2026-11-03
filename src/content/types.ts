@@ -115,6 +115,16 @@ export interface ScenarioMap {
   here?: string
 }
 
+/** A word students can tap for a short definition. */
+export interface GlossaryEntry {
+  id: string
+  term: string
+  /** Other spellings or forms that should open the same definition, e.g. "imports". */
+  aliases: string[]
+  definition: string
+  sources: string[]
+}
+
 export interface Scenario {
   id: string
   title: string
@@ -133,6 +143,8 @@ export interface Scenario {
   reveal: Reveal
   reflection: ReflectionPrompt[]
   sources: Record<string, Source>
+  /** Optional. Terms underlined in story text; tapping one shows its definition. */
+  glossary?: GlossaryEntry[]
 }
 
 export const END = 'END'

@@ -21,7 +21,7 @@ export function Reveal({ scenario, onNext }: Props) {
       }
     >
       <div className="parchment parchment-record">
-        <ContentText value={scenario.reveal.text} label="historical reveal" className="lead drop-cap" />
+        <ContentText value={scenario.reveal.text} label="historical reveal" className="lead drop-cap" terms />
         <SourceList ids={scenario.reveal.sources} scenario={scenario} />
       </div>
     </Frame>
