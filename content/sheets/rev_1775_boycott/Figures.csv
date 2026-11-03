@@ -1,4 +1,4 @@
 id,name,role,is_real_person,portrait,portrait_alt,start_node,place
-merchant,Mr. Hale,A shopkeeper who sells imported cloth and tea,no,,,merchant_intro,shop
-committee,Mrs. Porter,A member of the town's committee of inspection,no,,,committee_intro,meeting_house
-farmer,Mr. Bray,A farmer who owes money at Mr. Hale's shop,no,,,farmer_intro,farm
+merchant,Mr. Hale,A shopkeeper who sells imported cloth and tea,no,images/rev_1775_boycott/portrait-hale.svg,"Drawing of Mr. Hale, a made-up character: a shopkeeper with spectacles, tied-back hair, and a blue waistcoat.",merchant_intro,shop
+committee,Mrs. Porter,A member of the town's committee of inspection,no,images/rev_1775_boycott/portrait-porter.svg,"Drawing of Mrs. Porter, a made-up character: a woman in a white cap, a purple gown, and a white shawl, looking determined.",committee_intro,meeting_house
+farmer,Mr. Bray,A farmer who owes money at Mr. Hale's shop,no,images/rev_1775_boycott/portrait-bray.svg,"Drawing of Mr. Bray, a made-up character: a farmer with a straw hat, a red neckerchief, and a brown work coat.",farmer_intro,farm

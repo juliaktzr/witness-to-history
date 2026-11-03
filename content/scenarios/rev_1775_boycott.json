@@ -4,7 +4,7 @@
   "era": "American Revolution",
   "year": 1775,
   "location": "A small town in Massachusetts",
-  "summary": "DRAFT, not yet fact-checked. Your town must choose how strictly to enforce the boycott of British goods, without knowing what Britain will do next.",
+  "summary": "Your town must choose how strictly to enforce the boycott of British goods, without knowing what Britain will do next.",
   "briefing": [
     {
       "id": "brief_1",
@@ -37,13 +37,18 @@
       "heading": "Your town decides",
       "text": "The agreement told every town to elect a committee to watch who bought and sold British goods. Tonight your town meets to decide how strictly that committee will do its work. Nobody knows yet whether Britain will back down.",
       "sources": [
-        "src_association"
-      ]
+        "src_association",
+        "src_williamsburg"
+      ],
+      "image": {
+        "src": "images/rev_1775_boycott/alternative-of-williamsburg-1775.jpg",
+        "alt": "A 1775 London print making fun of the patriots. In Williamsburg, Virginia, a crowd with clubs watches a merchant sign a paper marked \"Non-Importation.\" Behind them, a sign reading \"A cure for the refractory\" hangs over a barrel of tar and a bag of feathers."
+      }
     },
     {
       "id": "brief_map",
       "heading": "Where you are",
-      "text": "DRAFT, written by the CS team for review. This map of New England was printed in London in 1774. Your town is one of many small towns in Massachusetts. Boston, the port Parliament closed, is on the coast to the east.",
+      "text": "This map of New England was printed in London in 1774. Your town is one of many small towns in Massachusetts. Boston, the port Parliament closed, is on the coast to the east.",
       "sources": [
         "src_map",
         "src_port_act"
@@ -66,6 +71,10 @@
       "role": "A shopkeeper who sells imported cloth and tea",
       "isRealPerson": false,
       "startNode": "merchant_intro",
+      "portrait": {
+        "src": "images/rev_1775_boycott/portrait-hale.svg",
+        "alt": "Drawing of Mr. Hale, a made-up character: a shopkeeper with spectacles, tied-back hair, and a blue waistcoat."
+      },
       "place": "shop"
     },
     {
@@ -74,6 +83,10 @@
       "role": "A member of the town's committee of inspection",
       "isRealPerson": false,
       "startNode": "committee_intro",
+      "portrait": {
+        "src": "images/rev_1775_boycott/portrait-porter.svg",
+        "alt": "Drawing of Mrs. Porter, a made-up character: a woman in a white cap, a purple gown, and a white shawl, looking determined."
+      },
       "place": "meeting_house"
     },
     {
@@ -82,6 +95,10 @@
       "role": "A farmer who owes money at Mr. Hale's shop",
       "isRealPerson": false,
       "startNode": "farmer_intro",
+      "portrait": {
+        "src": "images/rev_1775_boycott/portrait-bray.svg",
+        "alt": "Drawing of Mr. Bray, a made-up character: a farmer with a straw hat, a red neckerchief, and a brown work coat."
+      },
       "place": "farm"
     }
   ],
@@ -285,7 +302,7 @@
     },
     "outcome_refuse": {
       "title": "Standing apart",
-      "text": "Word travels that your town will not enforce the agreement. Under Article 14, colonies and towns that broke the Association risked being cut off from trade with everyone else. Merchants in neighboring towns grow reluctant to deal with yours.",
+      "text": "Word travels that your town will not enforce the agreement. The Association told people to break off all dealings with anyone who broke it, and to cut off trade with any colony that did. Merchants in neighboring towns grow reluctant to deal with yours.",
       "sources": [
         "src_association"
       ]
@@ -320,7 +337,7 @@
       "date": "Oct 20, 1774",
       "type": "document",
       "url": "https://avalon.law.yale.edu/18th_century/contcong_10-20-74.asp",
-      "excerpt": ""
+      "excerpt": "(Article 11) That a committee be chosen in every county, city, and town … whose business it shall be attentively to observe the conduct of all persons touching this association; and when it shall be made to appear … that any person … has violated this association, that such majority do forthwith cause the truth of the case to be published in the gazette; to the end, that all such foes to the rights of British-America may be publicly known, and universally contemned as the enemies of American liberty; and thenceforth we respectively will break off all dealings with him or her."
     },
     "src_port_act": {
       "title": "Boston Port Act",
@@ -328,23 +345,23 @@
       "date": "March 31, 1774",
       "type": "document",
       "url": "https://avalon.law.yale.edu/18th_century/boston_port_act.asp",
-      "excerpt": ""
+      "excerpt": "WHEREAS dangerous commotions and insurrections have been fomented and raised in the town of Boston, in the province of Massachuset's Bay, in New England, by divers ill-affected persons … in which commotions and insurrections certain valuable cargoes of teas, being the property of the East India Company, and on board certain vessels lying within the bay or harbour of Boston, were seized and destroyed …"
     },
     "src_chronicle": {
-      "title": "\"Trade Violators Exposed!\" Boston Chronicle",
-      "creator": "Boston Chronicle",
-      "date": "Aug 1769",
+      "title": "Lists of ships and merchants importing British goods, Boston Chronicle",
+      "creator": "John Mein, publisher of the Boston Chronicle",
+      "date": "Aug 17-21, 1769",
       "type": "newspaper",
-      "url": "https://www.masshist.org/revolution/non_importation.php",
+      "url": "https://www.masshist.org/revolution/doc-viewer.php?old=1&mode=nav&item_id=414",
       "excerpt": ""
     },
     "src_homespun": {
-      "title": "\"Made in America,\" Essex Gazette",
+      "title": "Report of spinning matches, Essex Gazette",
       "creator": "Essex Gazette",
-      "date": "May 1769",
+      "date": "May 23-30, 1769",
       "type": "newspaper",
-      "url": "https://www.masshist.org/revolution/non_importation.php",
-      "excerpt": ""
+      "url": "https://www.masshist.org/revolution/doc-viewer.php?old=1&mode=nav&item_id=423",
+      "excerpt": "The Ladies were all decently clad in Home-spun, the Manufacture of their own Town; who like true Female Patriots, shewed by their Conduct, that they despised to dress with the Manufactures of a Country that is endeavouring to enslave us."
     },
     "src_imports": {
       "title": "Continental Association overview",
@@ -356,7 +373,7 @@
     },
     "src_map": {
       "title": "A map of the most inhabited part of New England",
-      "creator": "Thomas Jefferys",
+      "creator": "Thomas Jefferys (publisher), drawn by John Green",
       "date": "1774",
       "type": "map",
       "url": "https://www.loc.gov/item/74692159/",
@@ -366,24 +383,32 @@
       "title": "Broadside: The Boston Committee of Correspondence responds to the Boston Port Bill",
       "creator": "Boston Committee of Correspondence",
       "date": "May 12, 1774",
-      "type": "image",
+      "type": "document",
       "url": "https://lccn.loc.gov/2006682758",
-      "excerpt": ""
+      "excerpt": "BY the last advices from London we learn that an Act has been passed by the British Parliament for blocking up the Harbour of Boston, with a Fleet of Ships of War, and preventing the Entrance in, or Exportation of, all Sorts of Merchandize, on Penalty of Forfeiture of the Goods and the Vessels which carry them …"
     },
     "src_bostonians": {
       "title": "The Bostonians in Distress",
-      "creator": "Unknown artist, printed in London",
-      "date": "1774",
+      "creator": "Printed for R. Sayer & J. Bennett, London",
+      "date": "Nov 19, 1774",
       "type": "image",
       "url": "https://www.britishmuseum.org/collection/object/P_1877-1013-854",
       "excerpt": ""
     },
     "src_lesson": {
       "title": "A Political Lesson",
-      "creator": "John Dixon",
-      "date": "1774",
+      "creator": "John Dixon; printed for John Bowles, London",
+      "date": "Sept 7, 1774",
       "type": "image",
       "url": "https://lccn.loc.gov/2004672699",
+      "excerpt": ""
+    },
+    "src_williamsburg": {
+      "title": "The Alternative of Williams-Burg",
+      "creator": "Philip Dawe (attributed); printed for R. Sayer & J. Bennett, London",
+      "date": "Feb 16, 1775",
+      "type": "image",
+      "url": "https://www.metmuseum.org/art/collection/search/388961",
       "excerpt": ""
     }
   },
