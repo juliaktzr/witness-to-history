@@ -19,7 +19,7 @@ interface Props {
   /** Where this screen sits in the play session. Omit to hide the tracker. */
   step?: JourneyStep
   children: ReactNode
-  /** Buttons rendered in a sticky footer. */
+  /** Buttons rendered after the content, so students scroll past the text to reach them. */
   actions?: ReactNode
 }
 
