@@ -19,6 +19,7 @@ export function Briefing({ scenario, index, onNext, onBack }: Props) {
     <Frame
       kicker={`${scenario.location}, ${scenario.year} · Briefing ${index + 1} of ${total}`}
       title={screen.heading}
+      step="briefing"
       actions={
         <>
           <button type="button" className="btn" onClick={onBack}>
@@ -48,8 +49,10 @@ export function Briefing({ scenario, index, onNext, onBack }: Props) {
           <li key={b.id} className={i === index ? 'is-current' : i < index ? 'is-done' : ''} />
         ))}
       </ol>
-      <ContentText value={screen.text} label="briefing text" className="lead drop-cap" />
-      <SourceList ids={screen.sources} scenario={scenario} />
+      <div className="parchment">
+        <ContentText value={screen.text} label="briefing text" className="lead drop-cap" />
+        <SourceList ids={screen.sources} scenario={scenario} />
+      </div>
     </Frame>
   )
 }

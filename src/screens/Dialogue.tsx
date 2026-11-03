@@ -31,6 +31,7 @@ export function Dialogue({ scenario, figureId, nodeId, onChoice, onLeave }: Prop
     <Frame
       kicker={figure.role}
       title={figure.name}
+      step="people"
       actions={
         <button type="button" className="btn" onClick={onLeave}>
           End conversation
@@ -38,7 +39,10 @@ export function Dialogue({ scenario, figureId, nodeId, onChoice, onLeave }: Prop
       }
     >
       <div className="speech">
-        <ContentImage image={figure.portrait} label={`portrait of ${figure.name}`} className="portrait" />
+        <div className="speaker">
+          <ContentImage image={figure.portrait} label={`portrait of ${figure.name}`} className="portrait" />
+          <span className="speaker-plinth" aria-hidden="true" />
+        </div>
         <div className="speech-bubble">
           <ContentText value={node.text} label="what they say" className="lead" />
           <SourceList ids={node.sources} scenario={scenario} />

@@ -18,11 +18,16 @@ export function EraSelect({ scenarios, completed, onChoose }: Props) {
       {scenarios.length === 0 && (
         <p className="placeholder">No scenarios found in content/scenarios.</p>
       )}
-      <ul className="card-list">
+      <ul className="card-list era-list">
         {scenarios.map(({ file, scenario, validation }, i) =>
           scenario ? (
-            <li key={file} className="card stagger" style={{ '--i': i } as React.CSSProperties}>
-              <ContentImage image={scenario.coverImage} label="cover" className="card-image" />
+            <li key={file} className={`card era-card stagger ${completed.includes(scenario.id) ? 'is-earned' : ''}`} style={{ '--i': i } as React.CSSProperties}>
+              <div className="era-cover">
+                <ContentImage image={scenario.coverImage} label="cover" className="card-image" />
+                <span className="era-seal" aria-hidden="true">
+                  {scenario.year}
+                </span>
+              </div>
               <div className="card-body">
                 <p className="kicker">
                   {scenario.era} · {scenario.year}

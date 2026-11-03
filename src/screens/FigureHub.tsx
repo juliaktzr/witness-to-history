@@ -79,6 +79,7 @@ export function FigureHub({
     <Frame
       kicker={`${scenario.location}, ${scenario.year}`}
       title="Who do you want to talk to?"
+      step="people"
       actions={
         <button type="button" className={`btn ${allVisited ? 'btn-primary' : ''}`} onClick={onDecide}>
           {allVisited ? 'Go to the town decision' : 'Skip to the decision'}
@@ -116,12 +117,14 @@ export function FigureHub({
           <h2 className="section-heading">Everyone in town</h2>
         </>
       )}
-      <ul className="card-list">
+      <ul className="card-list figure-list">
         {scenario.figures.map((f, i) => {
           const done = visited.includes(f.id)
           return (
-            <li key={f.id} className="card card-row stagger" style={{ '--i': i } as React.CSSProperties}>
-              <ContentImage image={f.portrait} label={`portrait of ${f.name}`} className="portrait" />
+            <li key={f.id} className={`card figure-card stagger ${done ? 'is-done' : ''}`} style={{ '--i': i } as React.CSSProperties}>
+              <div className="figure-medallion">
+                <ContentImage image={f.portrait} label={`portrait of ${f.name}`} className="portrait" />
+              </div>
               <div className="card-body">
                 <h2 className="card-title">
                   {f.name}

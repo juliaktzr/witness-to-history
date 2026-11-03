@@ -15,14 +15,17 @@ export function Outcome({ scenario, outcomeId, onNext }: Props) {
     <Frame
       kicker="What happens next"
       title={outcome?.title}
+      step="outcome"
       actions={
         <button type="button" className="btn btn-primary" onClick={onNext}>
           What really happened?
         </button>
       }
     >
-      <ContentText value={outcome?.text} label="outcome text" className="lead drop-cap" />
-      {outcome && <SourceList ids={outcome.sources} scenario={scenario} />}
+      <div className="parchment">
+        <ContentText value={outcome?.text} label="outcome text" className="lead drop-cap" />
+        {outcome && <SourceList ids={outcome.sources} scenario={scenario} />}
+      </div>
     </Frame>
   )
 }

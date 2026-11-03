@@ -13,14 +13,17 @@ export function Reveal({ scenario, onNext }: Props) {
     <Frame
       kicker="Historical reveal"
       title="What really happened"
+      step="history"
       actions={
         <button type="button" className="btn btn-primary" onClick={onNext}>
           Think it over
         </button>
       }
     >
-      <ContentText value={scenario.reveal.text} label="historical reveal" className="lead drop-cap" />
-      <SourceList ids={scenario.reveal.sources} scenario={scenario} />
+      <div className="parchment parchment-record">
+        <ContentText value={scenario.reveal.text} label="historical reveal" className="lead drop-cap" />
+        <SourceList ids={scenario.reveal.sources} scenario={scenario} />
+      </div>
     </Frame>
   )
 }

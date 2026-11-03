@@ -29,6 +29,7 @@ export function Reflection({ scenario, outcomeId, visited, playerName, onRestart
     <Frame
       kicker="Reflection"
       title="Look back on your choice"
+      step="reflect"
       actions={
         <>
           <button type="button" className="btn" onClick={() => window.print()}>
@@ -44,7 +45,7 @@ export function Reflection({ scenario, outcomeId, visited, playerName, onRestart
       }
     >
       {chosen && (
-        <p className="muted">
+        <p className="chosen-banner">
           You chose: <strong>{chosen.title}</strong>
         </p>
       )}

@@ -3137,3 +3137,1074 @@ body {
     padding: 0.3rem 0.55rem;
   }
 }
+
+/* =====================================================================
+   Game scenes: the scenario screens in the same candlelit night, brass,
+   and wax-seal look as the title and character screens. Story text sits
+   on brass-framed parchment (like the title ledger) so long passages stay
+   dark-on-light and easy to read. Screen only, so the printable
+   broadsheet above is untouched.
+
+   Colors flow through three variables so text reads right on either
+   surface: --text, --text-muted, --hi (headline/link accent). .frame sets
+   them for the dark scene; .parchment and .speech-bubble reset them.
+   ===================================================================== */
+
+@media screen {
+  body {
+    color: var(--vellum);
+    background-color: var(--night);
+    background-image:
+      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255, 190, 90, 0.14), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 50% 100%, rgba(155, 44, 23, 0.2), transparent 70%),
+      linear-gradient(180deg, #17110b 0%, var(--night) 70%);
+    background-attachment: fixed;
+  }
+
+  .frame {
+    --text: var(--vellum);
+    --text-muted: var(--vellum-muted);
+    --hi: var(--gold);
+    color: var(--text);
+    max-width: 48rem;
+    padding: 1.25rem 1rem 0;
+  }
+
+  .frame :focus-visible {
+    outline: 3px solid var(--candle);
+    outline-offset: 3px;
+  }
+
+  .frame .parchment,
+  .frame .speech-bubble {
+    --text: var(--ink);
+    --text-muted: var(--muted);
+    --hi: var(--accent);
+    color: var(--text);
+  }
+
+  .frame .parchment :focus-visible,
+  .frame .speech-bubble :focus-visible {
+    outline-color: var(--focus);
+  }
+
+  /* ---------- Header: dark glass, gold title ---------- */
+
+  .app-header {
+    background: rgba(18, 13, 8, 0.92);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--panel-line);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  }
+
+  .app-header-title {
+    font-family: var(--game-display);
+    font-weight: 900;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+  }
+
+  .app-header .btn {
+    border: 1px solid var(--panel-line);
+    border-radius: 10px;
+    background: var(--panel);
+    color: var(--vellum);
+    font-family: system-ui, sans-serif;
+    box-shadow: none;
+  }
+
+  .app-header .btn:hover {
+    background: #3a2a19;
+    border-color: var(--gold);
+    transform: none;
+  }
+
+  .app-header .btn-primary,
+  .app-header .btn-primary:hover {
+    background: linear-gradient(180deg, #e9c878, #b48a3c);
+    border-color: #f0d08c;
+    color: #24170a;
+  }
+
+  .app-header :focus-visible {
+    outline-color: var(--candle);
+  }
+
+  /* ---------- Journey tracker: the chapters of one play session ---------- */
+
+  .journey {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0 0 1.25rem;
+    padding: 0.35rem;
+    list-style: none;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 999px;
+    box-shadow: inset 0 1px 0 rgba(255, 220, 150, 0.08);
+  }
+
+  .journey-step {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-width: 0;
+    padding: 0.25rem 0.3rem;
+    border-radius: 999px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--vellum-muted);
+  }
+
+  .journey-gem {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    font-family: var(--game-display);
+    font-size: 0.72rem;
+    font-weight: 900;
+    color: var(--vellum-muted);
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(200, 160, 90, 0.35);
+  }
+
+  .journey-step.is-done {
+    color: var(--gold);
+  }
+
+  .journey-step.is-done .journey-gem {
+    color: #2b1a08;
+    background: radial-gradient(circle at 35% 30%, #fff1c7, #e7c173 40%, #9f7430 85%);
+    border-color: #f0d08c;
+  }
+
+  .journey-step.is-current {
+    color: #24170a;
+    background: linear-gradient(180deg, #e9c878, #b48a3c);
+    box-shadow: 0 0 16px rgba(255, 190, 90, 0.35);
+  }
+
+  .journey-step.is-current .journey-gem {
+    color: var(--gold);
+    background: #24170a;
+    border-color: #5a3d14;
+  }
+
+  .journey-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ---------- Headings ---------- */
+
+  .frame-header .kicker,
+  .frame .card .kicker {
+    font-family: var(--game-display);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+  }
+
+  .frame-title {
+    font-family: var(--game-display);
+    font-weight: 900;
+    font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    color: var(--vellum);
+    text-shadow:
+      0 2px 0 rgba(0, 0, 0, 0.5),
+      0 0 24px rgba(255, 190, 90, 0.18);
+  }
+
+  .frame-title::after {
+    width: 8rem;
+    height: 2px;
+    margin-top: 0.7rem;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  .frame .section-heading {
+    font-family: var(--game-display);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+  }
+
+  .frame .section-heading::before {
+    background: linear-gradient(90deg, transparent, var(--panel-line));
+  }
+
+  .frame .section-heading::after {
+    background: linear-gradient(90deg, var(--panel-line), transparent);
+  }
+
+  /* ---------- Text ---------- */
+
+  .frame .muted,
+  .frame .fine-print,
+  .frame .sources,
+  .frame .image-marker-caption {
+    color: var(--text-muted);
+  }
+
+  .frame .link-button {
+    color: var(--hi);
+    text-decoration-color: currentColor;
+  }
+
+  .frame .link-button:hover {
+    color: var(--text);
+  }
+
+  .frame .drop-cap::first-letter {
+    color: var(--hi);
+  }
+
+  /* ---------- Parchment: story text in a brass frame ---------- */
+
+  .frame .parchment,
+  .frame .speech-bubble {
+    position: relative;
+    padding: 1.4rem 1.5rem 1.25rem;
+    background-color: var(--surface);
+    background-image: var(--paper-noise), radial-gradient(ellipse at 50% 0%, #fff9ea, #eedfbf 80%);
+    border: 2px solid var(--gold-deep);
+    border-radius: 6px;
+    outline: 1px solid rgba(180, 138, 60, 0.55);
+    outline-offset: -8px;
+    box-shadow:
+      0 0 0 4px #2b1f12,
+      0 0 0 5px var(--gold-deep),
+      0 18px 40px rgba(0, 0, 0, 0.55),
+      0 0 50px rgba(255, 190, 90, 0.12);
+  }
+
+  .frame .parchment > :first-child {
+    margin-top: 0;
+  }
+
+  .frame .parchment > :last-child {
+    margin-bottom: 0;
+  }
+
+  .frame .parchment-record::after {
+    content: '\2766';
+    content: '\2766' / '';
+    position: absolute;
+    top: 0.45rem;
+    right: 0.9rem;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--gold-deep);
+  }
+
+  /* ---------- Buttons ---------- */
+
+  .frame .btn {
+    min-height: 3rem;
+    padding: 0.6rem 1.3rem;
+    border: 1px solid var(--panel-line);
+    border-radius: 10px;
+    background: linear-gradient(180deg, #3a2a19, #22180e);
+    color: var(--vellum);
+    font-family: var(--game-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    box-shadow:
+      0 4px 0 #0a0704,
+      0 8px 18px rgba(0, 0, 0, 0.4);
+    transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+  }
+
+  .frame .btn:hover {
+    border-color: var(--gold);
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+  }
+
+  .frame .btn:active {
+    transform: translateY(3px);
+    box-shadow:
+      0 1px 0 #0a0704,
+      0 4px 10px rgba(0, 0, 0, 0.35);
+  }
+
+  .frame .btn-primary {
+    border: 2px solid #f0d08c;
+    background: linear-gradient(180deg, #e9c878 0%, #c49645 55%, #9f7430 100%);
+    color: #24170a;
+    box-shadow:
+      0 0 0 1px #5a3d14,
+      0 5px 0 #5a3d14,
+      0 10px 24px rgba(255, 180, 70, 0.28);
+  }
+
+  .frame .btn-primary:active {
+    box-shadow:
+      0 0 0 1px #5a3d14,
+      0 2px 0 #5a3d14,
+      0 6px 16px rgba(255, 180, 70, 0.22);
+  }
+
+  /* Dialogue and decision choices: dark tiles with a numbered gold gem. */
+  .frame .choice-list {
+    counter-reset: choice;
+  }
+
+  .frame .choice-list > li {
+    counter-increment: choice;
+  }
+
+  .frame .btn-choice {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    width: 100%;
+    min-height: 3.4rem;
+    padding: 0.7rem 1rem 0.7rem 0.75rem;
+    text-align: left;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: 0;
+    color: var(--vellum);
+    background: linear-gradient(180deg, rgba(58, 42, 25, 0.96), rgba(34, 24, 14, 0.96));
+    border: 1px solid var(--panel-line);
+    border-radius: 14px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 220, 150, 0.08),
+      0 4px 0 #0a0704;
+  }
+
+  .frame .btn-choice:hover {
+    border-color: var(--gold);
+    filter: none;
+    transform: translateX(4px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 220, 150, 0.08),
+      0 4px 0 #0a0704,
+      0 0 18px rgba(255, 190, 90, 0.25);
+  }
+
+  .frame .btn-choice::before {
+    /* The "/ ''" keeps the number out of the accessible name; the first line is the fallback. */
+    content: counter(choice);
+    content: counter(choice) / '';
+    position: static;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 8px;
+    font-family: var(--game-display);
+    font-size: 1rem;
+    font-weight: 900;
+    color: #2b1a08;
+    background: radial-gradient(circle at 35% 30%, #fff1c7, #e7c173 40%, #9f7430 85%);
+    border: 1px solid #f0d08c;
+    box-shadow: 0 0 0 2px #2b1f12;
+    transform: none;
+    transition: transform 160ms var(--bounce);
+  }
+
+  .frame .btn-choice:hover::before {
+    color: #2b1a08;
+    transform: scale(1.12) rotate(-6deg);
+  }
+
+  /* The decision: bigger cards stamped with wax-seal letters. */
+  .frame .decision-list {
+    gap: 0.9rem;
+  }
+
+  .frame .decision-list .btn-choice {
+    min-height: 4.4rem;
+    padding: 0.9rem 1.1rem 0.9rem 0.9rem;
+    font-size: 1.12rem;
+  }
+
+  .frame .decision-list .btn-choice::before {
+    content: counter(choice, upper-alpha);
+    content: counter(choice, upper-alpha) / '';
+    width: 2.7rem;
+    height: 2.7rem;
+    border: 0;
+    border-radius: 46% 54% 50% 50% / 52% 48% 52% 48%;
+    font-size: 1.15rem;
+    color: #ffe7c0;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+    background: radial-gradient(circle at 35% 30%, #d4553a, var(--wax) 55%, #5e1609);
+    box-shadow:
+      inset 0 0 0 4px rgba(0, 0, 0, 0.18),
+      inset 0 0 0 6px rgba(255, 200, 170, 0.15),
+      0 3px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .frame .decision-list .btn-choice:hover::before {
+    color: #ffe7c0;
+  }
+
+  /* ---------- Sticky action tray ---------- */
+
+  .frame > .frame-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    margin: 2rem -1rem 0;
+    padding: 0.8rem 1rem calc(0.9rem + env(safe-area-inset-bottom, 0px));
+    border: 1px solid var(--panel-line);
+    border-bottom: 0;
+    border-radius: 16px 16px 0 0;
+    background: rgba(24, 17, 10, 0.94);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Three or more buttons would cover too much of a phone screen; let that tray scroll away. */
+  .frame > .frame-actions:has(> :nth-child(3)) {
+    position: static;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--panel-line);
+    border-radius: 16px;
+  }
+
+  /* ---------- Cards: dark game panels ---------- */
+
+  .frame .card {
+    color: var(--vellum);
+    background: linear-gradient(180deg, rgba(48, 35, 21, 0.95), rgba(28, 20, 12, 0.95));
+    border: 1px solid var(--panel-line);
+    border-radius: 16px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 220, 150, 0.08),
+      0 14px 30px rgba(0, 0, 0, 0.45);
+    transition: border-color 160ms ease, box-shadow 160ms ease, translate 200ms var(--bounce);
+  }
+
+  .frame .card::before {
+    inset: 0.35rem;
+    border-color: rgba(200, 160, 90, 0.18);
+    border-radius: 12px;
+  }
+
+  .frame .card:hover {
+    border-color: var(--gold-deep);
+    translate: 0 -3px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 220, 150, 0.08),
+      0 18px 36px rgba(0, 0, 0, 0.5),
+      0 0 24px rgba(255, 190, 90, 0.15);
+  }
+
+  .frame .card-title {
+    font-family: var(--game-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    color: var(--vellum);
+  }
+
+  .frame .card-error {
+    color: var(--error-ink);
+    background: var(--error-bg);
+    border: 2px solid var(--error-ink);
+  }
+
+  .frame .card-error .card-title {
+    color: var(--error-ink);
+  }
+
+  .frame .badge {
+    margin-left: 0.4rem;
+    padding: 0.15rem 0.55rem;
+    font-family: system-ui, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #24170a;
+    background: linear-gradient(180deg, #e9c878, #b48a3c);
+    border: 1px solid #f0d08c;
+  }
+
+  /* Image placeholders: still obvious, but dark so they do not glare. */
+  .frame .image-placeholder {
+    color: var(--vellum-muted);
+    background: repeating-linear-gradient(45deg, #2e2216 0 12px, #261c11 12px 24px);
+  }
+
+  /* ---------- Era select: level-select cards ---------- */
+
+  .era-list {
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1.25rem;
+  }
+
+  .era-cover {
+    position: relative;
+  }
+
+  .era-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 45%, rgba(28, 20, 12, 0.95));
+    pointer-events: none;
+  }
+
+  .frame .era-cover .card-image {
+    border-radius: 15px 15px 0 0;
+    filter: sepia(0.25) saturate(0.9) contrast(1.05);
+  }
+
+  .era-seal {
+    position: absolute;
+    z-index: 1;
+    right: 1rem;
+    bottom: -1.5rem;
+    display: grid;
+    place-items: center;
+    width: 4.2rem;
+    height: 4.2rem;
+    border-radius: 46% 54% 50% 50% / 52% 48% 52% 48%;
+    font-family: var(--game-display);
+    font-size: 0.95rem;
+    font-weight: 900;
+    color: #ffe7c0;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+    background: radial-gradient(circle at 35% 30%, #d4553a, var(--wax) 55%, #5e1609);
+    box-shadow:
+      inset 0 0 0 5px rgba(0, 0, 0, 0.18),
+      inset 0 0 0 7px rgba(255, 200, 170, 0.15),
+      0 6px 14px rgba(0, 0, 0, 0.55);
+    transform: rotate(-8deg);
+  }
+
+  .era-card.is-earned .era-seal {
+    box-shadow:
+      inset 0 0 0 5px rgba(0, 0, 0, 0.18),
+      inset 0 0 0 7px rgba(255, 200, 170, 0.15),
+      0 0 0 3px var(--gold),
+      0 0 22px rgba(255, 190, 90, 0.55);
+  }
+
+  .era-card .card-body {
+    padding: 1.2rem 1.25rem 1.3rem;
+  }
+
+  .era-card .card-title {
+    padding-right: 4rem;
+  }
+
+  .era-card .btn {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  /* ---------- Figure hub: character select ---------- */
+
+  .frame .quest-progress {
+    padding: 0.7rem 1rem;
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--vellum-muted);
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 14px;
+  }
+
+  .frame .quest-progress-bar {
+    flex: 1;
+    width: auto;
+    height: 0.9rem;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid var(--panel-line);
+  }
+
+  .frame .quest-progress-fill {
+    background: linear-gradient(90deg, #9b2c17, #d9832f 55%, #ffcf7a);
+    box-shadow: 0 0 10px rgba(255, 190, 90, 0.6);
+  }
+
+  .frame .town-map {
+    border: 3px solid var(--gold-deep);
+    border-radius: 14px;
+    box-shadow:
+      0 0 0 4px #2b1f12,
+      0 0 0 5px rgba(180, 138, 60, 0.6),
+      0 18px 40px rgba(0, 0, 0, 0.6),
+      inset 0 0 50px rgba(30, 20, 8, 0.45);
+  }
+
+  .frame .pin {
+    font-family: var(--game-display);
+    font-weight: 700;
+    color: #24170a;
+    background: linear-gradient(180deg, #f3d68e, #c49645 60%, #a97c34);
+    border: 2px solid #5a3d14;
+    border-radius: 10px;
+    box-shadow:
+      0 3px 0 #5a3d14,
+      0 6px 14px rgba(0, 0, 0, 0.45);
+  }
+
+  .frame .pin:hover {
+    background: linear-gradient(180deg, #fbe3a6, #d4a858 60%, #b58840);
+  }
+
+  .frame .pin-tail {
+    border-top-color: #5a3d14;
+  }
+
+  .frame .pin-done {
+    color: var(--gold);
+    background: rgba(30, 22, 14, 0.94);
+    border-color: var(--gold-deep);
+  }
+
+  .frame .pin-done .pin-tail {
+    border-top-color: var(--gold-deep);
+  }
+
+  .frame .place-label {
+    color: var(--vellum);
+    background: rgba(24, 17, 10, 0.85);
+    border-color: rgba(200, 160, 90, 0.5);
+  }
+
+  .frame .place-here {
+    color: var(--plumbob);
+  }
+
+  .figure-list {
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  }
+
+  .frame .figure-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.4rem 1rem 1.1rem;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 70% 40% at 50% 0%, rgba(255, 207, 122, 0.2), transparent 70%),
+      linear-gradient(180deg, rgba(48, 35, 21, 0.95), rgba(28, 20, 12, 0.95));
+  }
+
+  .figure-medallion {
+    position: relative;
+    flex: none;
+    padding: 4px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff1c7, #e7c173 40%, #9f7430 85%);
+    box-shadow:
+      0 0 0 2px #5a3d14,
+      0 0 24px rgba(255, 190, 90, 0.3);
+  }
+
+  .frame .figure-medallion .portrait {
+    display: flex;
+    width: 6.5rem;
+    height: 6.5rem;
+    border: 3px solid #2b1f12;
+    box-shadow: none;
+  }
+
+  .figure-card.is-done .figure-medallion::after {
+    content: '\2713';
+    content: '\2713' / '';
+    position: absolute;
+    right: -0.2rem;
+    bottom: -0.1rem;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    font-family: system-ui, sans-serif;
+    font-weight: 900;
+    color: #0e3d13;
+    background: radial-gradient(circle at 35% 30%, #c9ffb0, var(--plumbob) 55%, var(--plumbob-dark));
+    border: 2px solid #0e3d13;
+    box-shadow: 0 0 10px rgba(78, 232, 90, 0.6);
+  }
+
+  .frame .figure-card .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+    width: 100%;
+    padding: 0.9rem 0 0;
+  }
+
+  .frame .figure-card .card-body > * {
+    margin: 0;
+  }
+
+  .frame .figure-card .btn {
+    margin-top: auto;
+  }
+
+  .frame .figure-card .card-body > .content-text,
+  .frame .figure-card .fine-print {
+    margin-bottom: 0.4rem;
+  }
+
+  /* ---------- Briefing ---------- */
+
+  .frame .hero-image,
+  .frame .image-placeholder.hero-image {
+    background-color: #0d0a07;
+    background-image: none;
+    border: 2px solid var(--gold-deep);
+    border-radius: 12px;
+    box-shadow:
+      0 0 0 4px #2b1f12,
+      0 0 0 5px rgba(180, 138, 60, 0.6),
+      0 18px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  .frame .progress-dots {
+    gap: 0.75rem;
+    margin-top: 1.1rem;
+  }
+
+  .frame .progress-dots li {
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 2px;
+    border-color: var(--gold-deep);
+    transform: rotate(45deg);
+  }
+
+  .frame .progress-dots li.is-done {
+    background: var(--gold-deep);
+  }
+
+  .frame .progress-dots li.is-current {
+    background: var(--gold);
+    border-color: var(--candle);
+    box-shadow: 0 0 10px rgba(255, 190, 90, 0.6);
+    transform: rotate(45deg) scale(1.35);
+  }
+
+  /* ---------- Dialogue: figure on a spotlight stage ---------- */
+
+  .frame .speech {
+    align-items: center;
+    gap: 1.6rem;
+  }
+
+  .speaker {
+    position: relative;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 10rem;
+    padding: 1.3rem 0.5rem 0.9rem;
+    border: 1px solid var(--panel-line);
+    border-radius: 18px;
+    background:
+      radial-gradient(ellipse 50% 60% at 50% 40%, rgba(255, 207, 122, 0.28), transparent 70%),
+      radial-gradient(ellipse at 50% 100%, rgba(155, 44, 23, 0.25), transparent 60%),
+      linear-gradient(180deg, #241a10, #150f09);
+    overflow: hidden;
+  }
+
+  .speaker::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    width: 80%;
+    height: 90%;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, rgba(255, 220, 150, 0.18), transparent 80%);
+    clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%);
+    pointer-events: none;
+  }
+
+  .frame .speaker .portrait {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: 7rem;
+    height: 7rem;
+    border: 3px solid var(--gold-deep);
+    box-shadow:
+      0 0 0 3px #2b1f12,
+      0 0 24px rgba(255, 190, 90, 0.3);
+  }
+
+  .speaker-plinth {
+    display: block;
+    width: 8rem;
+    height: 1.3rem;
+    margin-top: -0.5rem;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at 50% 40%, #6b4a22, #2b1d0f 70%);
+    border: 2px solid var(--gold-deep);
+    box-shadow: 0 0 20px rgba(255, 190, 90, 0.25);
+  }
+
+  .frame .speech-bubble {
+    padding-left: 1.8rem;
+  }
+
+  .frame .speech-bubble::before {
+    left: 0.55rem;
+    top: 0.1rem;
+    color: var(--gold-deep);
+  }
+
+  .frame .speech-bubble::after {
+    left: -1.15rem;
+    top: 50%;
+    margin-top: -0.6rem;
+    border-top-width: 0.6rem;
+    border-bottom-width: 0.6rem;
+    border-right: 0.8rem solid var(--gold-deep);
+  }
+
+  /* ---------- Decision ---------- */
+
+  .frame .callout.parchment {
+    padding: 1.2rem 1.4rem;
+  }
+
+  .frame .callout-label {
+    color: var(--accent);
+  }
+
+  /* ---------- Reflection ---------- */
+
+  .chosen-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0.8rem 1.1rem;
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--vellum-muted);
+    background: linear-gradient(90deg, rgba(155, 44, 23, 0.4), rgba(40, 29, 18, 0.9));
+    border: 1px solid var(--panel-line);
+    border-radius: 14px;
+  }
+
+  .chosen-banner strong {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--vellum);
+  }
+
+  .frame .reflect-block {
+    padding: 1.1rem 1.2rem 1.2rem;
+    color: var(--vellum);
+    background: var(--panel);
+    background-image: none;
+    border: 1px solid var(--panel-line);
+    border-radius: 14px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 220, 150, 0.08),
+      0 12px 26px rgba(0, 0, 0, 0.4);
+  }
+
+  .frame .reflect-label {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    line-height: 1.35;
+  }
+
+  .frame .reflect-label .kicker {
+    margin-bottom: 0.2rem;
+    font-family: var(--game-display);
+    font-weight: 700;
+    font-size: 0.8rem;
+    font-variant: normal;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+  }
+
+  .frame textarea {
+    font-size: 1rem;
+    color: var(--ink);
+    background-color: var(--surface);
+    background-image: var(--paper-noise);
+    border: 2px solid var(--gold-deep);
+    border-radius: 10px;
+  }
+
+  .frame textarea::placeholder {
+    color: #6b5a40;
+  }
+
+  /* ---------- Dialogs: parchment in a brass frame, like the title ledger ---------- */
+
+  .source-panel {
+    border: 2px solid var(--gold-deep);
+    border-radius: 8px;
+    background-color: var(--surface);
+    background-image: var(--paper-noise), radial-gradient(ellipse at 50% 0%, #fff9ea, #eedfbf 80%);
+    box-shadow:
+      0 0 0 5px #2b1f12,
+      0 0 0 6px var(--gold-deep),
+      0 22px 50px rgba(0, 0, 0, 0.6);
+  }
+
+  .source-panel::backdrop {
+    background: rgba(8, 5, 2, 0.72);
+  }
+
+  .source-panel-title {
+    font-family: var(--game-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    line-height: 1.25;
+    color: var(--accent);
+  }
+
+  .source-panel .btn-primary {
+    border: 2px solid #f0d08c;
+    background: linear-gradient(180deg, #e9c878 0%, #c49645 55%, #9f7430 100%);
+    color: #24170a;
+    font-family: var(--game-display);
+    font-weight: 700;
+    box-shadow:
+      0 0 0 1px #5a3d14,
+      0 4px 0 #5a3d14;
+  }
+
+  /* ---------- Motion ---------- */
+
+  @media (prefers-reduced-motion: no-preference) {
+    .journey-step.is-current .journey-gem {
+      animation: gem-glow 2.4s ease-in-out infinite;
+    }
+
+    .speaker .portrait {
+      animation: rise-in 500ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+  }
+
+  /* ---------- Narrow screens ---------- */
+
+  @media (max-width: 36rem) {
+    /* Only the current chapter keeps its word; the rest show their number. */
+    .journey-step:not(.is-current) .journey-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .journey-step:not(.is-current) {
+      flex: none;
+    }
+
+    .journey-step.is-current {
+      flex: none;
+      padding-right: 0.65rem;
+    }
+
+    .app-header-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.03em;
+      line-height: 1.15;
+    }
+
+    .journey {
+      justify-content: space-between;
+    }
+
+    .frame > .frame-actions .btn {
+      flex: 1 1 auto;
+    }
+
+    /* Figure cards go side-by-side again: medallion left, details right. */
+    .frame .figure-card {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .frame .figure-medallion .portrait {
+      width: 4.4rem;
+      height: 4.4rem;
+    }
+
+    .figure-card.is-done .figure-medallion::after {
+      width: 1.6rem;
+      height: 1.6rem;
+      font-size: 0.8rem;
+    }
+
+    .frame .figure-card .card-body {
+      padding-top: 0;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .frame .speech {
+      align-items: stretch;
+      gap: 1.2rem;
+    }
+
+    .speaker {
+      width: 100%;
+      padding: 0.9rem 0.5rem 0.7rem;
+    }
+
+    .frame .speaker .portrait {
+      width: 5.5rem;
+      height: 5.5rem;
+    }
+
+    .speaker-plinth {
+      width: 7rem;
+    }
+
+    .frame .parchment,
+    .frame .speech-bubble {
+      padding: 1.2rem 1.1rem 1.1rem;
+    }
+
+    .frame .speech-bubble {
+      padding-left: 1.5rem;
+    }
+  }
+}
+
+@keyframes gem-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 207, 122, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(255, 207, 122, 0.35);
+  }
+}
