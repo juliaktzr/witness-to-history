@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Avatar } from '../components/Avatar'
 import { AvatarBuilder } from '../components/AvatarPicker'
-import { ConfirmDialog } from '../components/ConfirmDialog'
 import type { LoadedScenario } from '../content/loadScenarios'
 import type { AvatarPrefs, Expression, Pose } from '../engine/avatarPrefs'
 import { NAME_MAX, standing, type PlayerProfile } from '../engine/profile'
@@ -23,8 +22,10 @@ interface Props {
   onRename: (name: string) => void
   onBegin: () => void
   onTitle: () => void
-  /** Wipe the saved character and progress, back to the title screen. */
+  /** Ask to wipe the saved character and progress (App shows the confirm). */
   onStartOver: () => void
+  /** True when the student left an era in progress to get here. */
+  midEra?: boolean
 }
 
 /**
@@ -32,10 +33,9 @@ interface Props {
  * the seals you have earned, then set off. Everything here is cosmetic and
  * local; none of it changes what happens in a scenario.
  */
-export function CharacterScreen({ profile, avatarPrefs, scenarios, onChangePrefs, onRename, onBegin, onTitle, onStartOver }: Props) {
+export function CharacterScreen({ profile, avatarPrefs, scenarios, onChangePrefs, onRename, onBegin, onTitle, onStartOver, midEra }: Props) {
   const headingRef = useRef<HTMLHeadingElement>(null)
   const [stickerId, setStickerId] = useState('stand')
-  const [confirmStartOver, setConfirmStartOver] = useState(false)
   const sticker = STICKERS.find((st) => st.id === stickerId) ?? STICKERS[0]
   const s = standing(profile)
   const playable = scenarios.flatMap((l) => (l.scenario ? [l.scenario] : []))
@@ -66,7 +66,7 @@ export function CharacterScreen({ profile, avatarPrefs, scenarios, onChangePrefs
           </span>
           <span className="rail-label">Eras</span>
         </button>
-        <button type="button" className="rail-btn rail-btn-danger" onClick={() => setConfirmStartOver(true)}>
+        <button type="button" className="rail-btn rail-btn-danger" onClick={onStartOver}>
           <span className="rail-glyph" aria-hidden="true">
             ↺
           </span>
@@ -205,23 +205,9 @@ export function CharacterScreen({ profile, avatarPrefs, scenarios, onChangePrefs
         </div>
 
         <button type="button" className="btn btn-game dash-begin" onClick={onBegin}>
-          Begin your journey →
+          {midEra ? 'Back to your journey →' : 'Begin your journey →'}
         </button>
       </aside>
-
-      <ConfirmDialog
-        open={confirmStartOver}
-        title="Start over completely?"
-        confirmLabel="Start over"
-        cancelLabel="Keep my character"
-        onCancel={() => setConfirmStartOver(false)}
-        onConfirm={() => {
-          setConfirmStartOver(false)
-          onStartOver()
-        }}
-      >
-        <p>This clears your name, level, seals, and outfit on this device. You cannot undo it.</p>
-      </ConfirmDialog>
     </main>
   )
 }

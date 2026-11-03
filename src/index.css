@@ -4246,3 +4246,206 @@ body {
     border-radius: 0 10px 10px 0;
   }
 }
+
+/* =====================================================================
+   ☰ Game menu: Home, character, read aloud, start over. In the header on
+   scenario screens, floating top-right on the title and character screens.
+   ===================================================================== */
+
+.game-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.game-menu-float {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 20;
+}
+
+.game-menu-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--panel-line);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--vellum);
+  font-family: system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.game-menu-button:hover {
+  border-color: var(--gold);
+  background: #3a2a19;
+}
+
+.game-menu-button[aria-expanded='true'] {
+  color: #24170a;
+  background: linear-gradient(180deg, #e9c878, #b48a3c);
+  border-color: #f0d08c;
+}
+
+.game-menu-button:focus-visible,
+.game-menu-item:focus-visible {
+  outline: 3px solid var(--candle);
+  outline-offset: 2px;
+}
+
+.game-menu-bars {
+  display: grid;
+  gap: 3px;
+}
+
+.game-menu-bars span {
+  display: block;
+  width: 1.1rem;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+/* Bars turn into an X while open. */
+.game-menu-button[aria-expanded='true'] .game-menu-bars span:nth-child(1) {
+  transform: translateY(5px) rotate(45deg);
+}
+
+.game-menu-button[aria-expanded='true'] .game-menu-bars span:nth-child(2) {
+  opacity: 0;
+}
+
+.game-menu-button[aria-expanded='true'] .game-menu-bars span:nth-child(3) {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+/* Green dot while read aloud is on, so the state shows with the menu closed. */
+.game-menu-indicator {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: var(--plumbob);
+  border: 2px solid var(--night);
+  box-shadow: 0 0 8px rgba(78, 232, 90, 0.8);
+}
+
+.game-menu-list {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 60;
+  display: grid;
+  gap: 0.2rem;
+  min-width: 15rem;
+  padding: 0.4rem;
+  background: rgba(30, 22, 14, 0.98);
+  border: 1px solid var(--gold-deep);
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 3px #2b1f12,
+    0 18px 40px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(255, 190, 90, 0.12);
+}
+
+.game-menu-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.5rem 0.8rem;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--vellum);
+  font-family: system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.game-menu-item:hover,
+.game-menu-item:focus-visible {
+  background: rgba(231, 193, 115, 0.14);
+  color: #fff;
+}
+
+.game-menu-item:focus-visible {
+  outline-offset: -3px;
+}
+
+.game-menu-glyph {
+  flex: none;
+  width: 1.6rem;
+  font-size: 1.1rem;
+  text-align: center;
+  color: var(--gold);
+}
+
+.game-menu-label {
+  flex: 1;
+}
+
+.game-menu-switch {
+  padding: 0.1rem 0.6rem;
+  border: 1px solid var(--panel-line);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--vellum-muted);
+}
+
+.game-menu-switch.is-on {
+  color: #0e3d13;
+  background: var(--plumbob);
+  border-color: var(--plumbob-dark);
+}
+
+/* Start over: set apart below a rule, in wax red. */
+.game-menu-item.is-danger {
+  margin-top: 0.4rem;
+  color: #f0a08c;
+}
+
+.game-menu-item.is-danger::before {
+  content: '';
+  position: absolute;
+  top: -0.3rem;
+  left: 0.5rem;
+  right: 0.5rem;
+  height: 1px;
+  background: var(--panel-line);
+}
+
+.game-menu-item.is-danger .game-menu-glyph {
+  color: #f0a08c;
+}
+
+.game-menu-item.is-danger:hover,
+.game-menu-item.is-danger:focus-visible {
+  color: #ffd2c4;
+  background: rgba(155, 44, 23, 0.35);
+}
+
+@media (max-width: 22rem) {
+  .game-menu-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
