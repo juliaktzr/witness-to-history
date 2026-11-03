@@ -72,8 +72,8 @@
       "isRealPerson": false,
       "startNode": "merchant_intro",
       "portrait": {
-        "src": "images/rev_1775_boycott/portrait-hale.svg",
-        "alt": "Drawing of Mr. Hale, a made-up character: a shopkeeper with spectacles, tied-back hair, and a blue waistcoat."
+        "src": "images/rev_1775_boycott/portrait-hale.jpg",
+        "alt": "Illustration of Mr. Hale, a made-up character: a worried shopkeeper with round spectacles, brown hair tied back, a white shirt, and a navy waistcoat."
       },
       "place": "shop"
     },
@@ -84,8 +84,8 @@
       "isRealPerson": false,
       "startNode": "committee_intro",
       "portrait": {
-        "src": "images/rev_1775_boycott/portrait-porter.svg",
-        "alt": "Drawing of Mrs. Porter, a made-up character: a woman in a white cap, a purple gown, and a white shawl, looking determined."
+        "src": "images/rev_1775_boycott/portrait-porter.jpg",
+        "alt": "Illustration of Mrs. Porter, a made-up character: a stern older woman in a white linen cap, with a white shawl crossed over a purple gown."
       },
       "place": "meeting_house"
     },
@@ -96,8 +96,8 @@
       "isRealPerson": false,
       "startNode": "farmer_intro",
       "portrait": {
-        "src": "images/rev_1775_boycott/portrait-bray.svg",
-        "alt": "Drawing of Mr. Bray, a made-up character: a farmer with a straw hat, a red neckerchief, and a brown work coat."
+        "src": "images/rev_1775_boycott/portrait-bray.jpg",
+        "alt": "Illustration of Mr. Bray, a made-up character: a young Black farmer with freckles, a straw hat, a red neckerchief, and a brown work coat."
       },
       "place": "farm"
     }
