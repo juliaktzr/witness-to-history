@@ -65,10 +65,6 @@ export function Reflection({ scenario, outcomeId, visited, playerName, onRestart
           />
         </div>
       ))}
-      <p className="fine-print">
-        "Print or save as PDF" opens your browser's print dialog with a one-page summary you can print or
-        save, to bring to class.
-      </p>
 
       {/* Hidden on screen; shown only when printing, styled like an old broadsheet (see index.css). */}
       <div className="printable-summary">
