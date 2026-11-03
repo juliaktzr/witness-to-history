@@ -24,24 +24,6 @@ interface Props {
 /** A handful of little bursting dots, purely decorative, honoring reduced-motion via CSS. */
 const CONFETTI_DOTS = [0, 1, 2, 3, 4, 5]
 
-/** "A", "A and B", "A, B and C". */
-function listNames(names: string[]): string {
-  return names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`
-}
-
-/** One note for the whole hub instead of a line on every card. Built from isRealPerson, so it fits any scenario. */
-function compositeNote(figures: Scenario['figures']): string | null {
-  const madeUp = figures.filter((f) => !f.isRealPerson)
-  if (madeUp.length === 0) return null
-  const who =
-    madeUp.length === figures.length
-      ? figures.length === 1
-        ? 'The person you meet here is a made-up character'
-        : 'The people you meet here are made-up characters'
-      : `${listNames(madeUp.map((f) => f.name))} ${madeUp.length === 1 ? 'is a made-up character' : 'are made-up characters'}`
-  return `${who}, based on real people who lived at the time.`
-}
-
 /** "Meeting house" -> "the meeting house"; "Mr. Hale's shop" stays as written. */
 function placePhrase(label: string): string {
   const words = label.trim().split(/\s+/)
@@ -157,14 +139,6 @@ export function FigureHub({
           )
         })}
       </ul>
-      {compositeNote(scenario.figures) && (
-        <p className="composite-note">
-          <span className="composite-note-icon" aria-hidden="true">
-            ⓘ
-          </span>
-          {compositeNote(scenario.figures)}
-        </p>
-      )}
     </Frame>
   )
 }

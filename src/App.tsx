@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useReducer, useState } from 'react'
+import { AboutDialog } from './components/AboutDialog'
 import { AppHeader, FloatingMenu } from './components/AppHeader'
 import { AvatarPicker } from './components/AvatarPicker'
 import { ConfirmDialog } from './components/ConfirmDialog'
@@ -42,6 +43,7 @@ export default function App() {
   const [openSourceId, setOpenSourceId] = useState<string | null>(null)
   const [confirmHome, setConfirmHome] = useState(false)
   const [confirmStartOver, setConfirmStartOver] = useState(false)
+  const [aboutOpen, setAboutOpen] = useState(false)
   const [avatarPrefs, setAvatarPrefs] = useState<AvatarPrefs>(loadAvatarPrefs)
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false)
   const [profile, setProfile] = useState<PlayerProfile | null>(loadProfile)
@@ -97,9 +99,9 @@ export default function App() {
   // Read a dialog (source record or question) when it opens; go back to silence when it closes.
   useEffect(() => {
     if (!enabled) return
-    if (openSourceId || confirmHome || confirmStartOver) speak(collectScreenText(document.querySelector('dialog[open]') ?? undefined))
+    if (openSourceId || confirmHome || confirmStartOver || aboutOpen) speak(collectScreenText(document.querySelector('dialog[open]') ?? undefined))
     else stop()
-  }, [enabled, openSourceId, confirmHome, confirmStartOver, speak, stop])
+  }, [enabled, openSourceId, confirmHome, confirmStartOver, aboutOpen, speak, stop])
 
   // Leaving the scenario closes any open panel.
   useEffect(() => {
@@ -218,14 +220,16 @@ export default function App() {
   const readAloudItems: MenuItem[] = readAloud.supported
     ? [{ id: 'read-aloud', label: 'Read aloud', glyph: '🔊', checked: enabled, onSelect: readAloud.toggle }]
     : []
+  const aboutItem: MenuItem = { id: 'about', label: 'About this game', glyph: 'ⓘ', onSelect: () => setAboutOpen(true) }
   const startOverItem: MenuItem = { id: 'start-over', label: 'Start over', glyph: '↺', danger: true, onSelect: () => setConfirmStartOver(true) }
   let menuItems: MenuItem[]
   if (stage === 'title' || !profile) {
-    menuItems = [...readAloudItems, ...(profile ? [startOverItem] : [])]
+    menuItems = [...readAloudItems, aboutItem, ...(profile ? [startOverItem] : [])]
   } else if (stage === 'character') {
     menuItems = [
       { id: 'journey', label: scenario ? 'Back to your journey' : 'Choose an era', glyph: '✦', onSelect: () => setStage('game') },
       ...readAloudItems,
+      aboutItem,
       startOverItem,
     ]
   } else {
@@ -233,6 +237,7 @@ export default function App() {
       ...(scenario ? [{ id: 'home', label: 'Home: choose an era', glyph: '⌂', onSelect: () => setConfirmHome(true) }] : []),
       { id: 'character', label: 'My character', glyph: '♜', onSelect: () => setStage('character') },
       ...readAloudItems,
+      aboutItem,
       startOverItem,
     ]
   }
@@ -281,6 +286,14 @@ export default function App() {
       <AvatarPicker open={avatarPickerOpen} prefs={avatarPrefs} onChange={handleAvatarChange} onClose={() => setAvatarPickerOpen(false)} />
       <WarningBanner warnings={warnings} />
       {body}
+      {stage === 'game' && (
+        <footer className="game-footer">
+          <button type="button" className="link-button" onClick={() => setAboutOpen(true)}>
+            About this game
+          </button>
+        </footer>
+      )}
+      <AboutDialog open={aboutOpen} scenario={scenario ?? null} onClose={() => setAboutOpen(false)} />
       <SourcePanel sourceId={openSourceId} source={openSource} onClose={() => setOpenSourceId(null)} />
     </SourceViewerContext.Provider>
   )

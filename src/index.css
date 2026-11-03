@@ -4450,26 +4450,53 @@ body {
   }
 }
 
-/* One small "these people are made up" note under the hub's list of people. */
-@media screen {
-  .frame .composite-note {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    margin-top: 1.25rem;
-    padding: 0.6rem 0.9rem;
-    font-family: system-ui, sans-serif;
-    font-size: 0.8rem;
-    line-height: 1.4;
-    color: var(--vellum-muted);
-    border: 1px dashed var(--panel-line);
-    border-radius: 12px;
-  }
+/* ---------- The fine print: a tiny footer link and the About dialog ---------- */
 
-  .composite-note-icon {
-    flex: none;
-    font-size: 1rem;
-    line-height: 1.1;
-    color: var(--gold);
-  }
+.game-footer {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 0 1rem 1.25rem;
+  text-align: center;
+}
+
+.game-footer .link-button {
+  font-family: system-ui, sans-serif;
+  font-size: 0.68rem;
+  color: rgba(205, 185, 145, 0.72);
+  text-decoration-color: rgba(205, 185, 145, 0.3);
+}
+
+.game-footer .link-button:hover {
+  color: var(--vellum-muted);
+}
+
+.game-footer .link-button:focus-visible {
+  outline: 3px solid var(--candle);
+  outline-offset: 3px;
+}
+
+.about-dialog {
+  width: min(100% - 2rem, 30rem);
+}
+
+.about-list {
+  margin: 0;
+}
+
+.about-list dt {
+  margin-top: 0.8rem;
+  font-family: var(--display-sc);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+
+.about-list dt:first-child {
+  margin-top: 0;
+}
+
+.about-list dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
 }
