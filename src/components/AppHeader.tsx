@@ -13,8 +13,11 @@ interface Props {
   onOpenProfile: () => void;
   /** Opens the journal. Omitted when no era is in progress. */
   onOpenJournal?: () => void;
-  /** Show the "use your journal" tip under the Journal button. */
-  showJournalTip?: boolean;
+  /**
+   * Pop-out under the Journal button: "intro" at the start of an era,
+   * "saving" during the student's first conversation (it is being saved there).
+   */
+  journalTip?: "intro" | { saving: string } | null;
   onDismissJournalTip?: () => void;
 }
 
@@ -31,7 +34,7 @@ export function AppHeader({
   menuIndicator,
   onOpenProfile,
   onOpenJournal,
-  showJournalTip,
+  journalTip,
   onDismissJournalTip,
 }: Props) {
   const s = standing(profile);
@@ -59,17 +62,24 @@ export function AppHeader({
               type="button"
               className="game-menu-button journal-header-btn"
               onClick={onOpenJournal}
-              aria-describedby={showJournalTip ? "journal-tip" : undefined}
+              aria-describedby={journalTip ? "journal-tip" : undefined}
             >
               <span aria-hidden="true">📖</span>
               <span className="game-menu-text">Journal</span>
             </button>
-            {showJournalTip && (
-              <div className="journal-tip" id="journal-tip">
-                <p>
-                  <strong>Keep a journal!</strong> Tap <span aria-hidden="true">📖</span> Journal any time to write down
-                  what you notice. After you talk to someone, their page opens with everything they said.
-                </p>
+            {journalTip && (
+              <div className="journal-tip" id="journal-tip" role="status">
+                {journalTip === "intro" ? (
+                  <p>
+                    <strong>Keep a journal!</strong> Tap <span aria-hidden="true">📖</span> Journal any time to write
+                    down what you notice. After you talk to someone, their page opens with everything they said.
+                  </p>
+                ) : (
+                  <p>
+                    <strong>Saving to your journal.</strong> Everything {journalTip.saving} says here is saved on their
+                    page in <span aria-hidden="true">📖</span> Journal, so you can read it again or add notes later.
+                  </p>
+                )}
                 <button type="button" className="journal-tip-close" onClick={onDismissJournalTip}>
                   Got it
                 </button>

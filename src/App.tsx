@@ -60,6 +60,8 @@ export default function App() {
   const [notes, setNotes] = useState<Notes>({})
   // The "keep a journal" tip shows at the start of each era until the student opens the journal or taps Got it.
   const [journalTipDone, setJournalTipDone] = useState(false)
+  // The "saving to your journal" pop-out shows during the first conversation of each era until dismissed.
+  const [savingTipDone, setSavingTipDone] = useState(false)
   const [profile, setProfile] = useState<PlayerProfile | null>(loadProfile)
   const [stage, setStage] = useState<Stage>('title')
   const openSource = openSourceId ? scenario?.sources[openSourceId] : undefined
@@ -94,6 +96,7 @@ export default function App() {
 
   function openJournal(figureId: string | null = null) {
     setJournalTipDone(true)
+    setSavingTipDone(true)
     setJournalFigure(figureId)
     setJournalOpen(true)
   }
@@ -142,6 +145,7 @@ export default function App() {
     setTermId(null)
     setJournalOpen(false)
     setJournalTipDone(false)
+    setSavingTipDone(false)
     setNotes(scenario ? loadNotes(scenario.id) : {})
   }, [scenario])
 
@@ -283,6 +287,17 @@ export default function App() {
       startOverItem,
     ]
   }
+  // During the first conversation of the era, the Journal button pops out a note that the talk is being saved.
+  // It replaces the intro tip there; both stop once the student opens the journal or taps Got it.
+  const talksStarted = state.talkLog.filter((e) => e.kind === 'start').length
+  const firstTalk = screen.kind === 'dialogue' && talksStarted === 1 ? screen.figureId : null
+  const firstTalkName = firstTalk ? scenario?.figures.find((f) => f.id === firstTalk)?.name : undefined
+  let journalTip: 'intro' | { saving: string } | null = null
+  if (scenario && screen.kind !== 'era-select') {
+    if (firstTalkName && !savingTipDone) journalTip = { saving: firstTalkName }
+    // The intro tip only leads up to the first conversation; after that the saving note has done its job.
+    else if (!journalTipDone && talksStarted === 0) journalTip = 'intro'
+  }
   const menuIndicator = enabled ? 'Read aloud is on' : undefined
 
   return (
@@ -298,8 +313,8 @@ export default function App() {
             // Mid-era, just open the wardrobe so the student does not lose their place.
             onOpenProfile={() => (scenario ? setAvatarPickerOpen(true) : setStage('character'))}
             onOpenJournal={scenario && screen.kind !== 'era-select' ? () => openJournal() : undefined}
-            showJournalTip={!journalTipDone && !!scenario && screen.kind !== 'era-select'}
-            onDismissJournalTip={() => setJournalTipDone(true)}
+            journalTip={journalTip}
+            onDismissJournalTip={() => (journalTip === 'intro' ? setJournalTipDone(true) : setSavingTipDone(true))}
           />
         )}
         {stage !== 'game' && menuItems.length > 0 && <FloatingMenu items={menuItems} indicator={menuIndicator} />}
