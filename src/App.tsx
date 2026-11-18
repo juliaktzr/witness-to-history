@@ -9,6 +9,7 @@ import { GlossaryDialog } from './components/GlossaryDialog'
 import { SourcePanel } from './components/SourcePanel'
 import { SourceViewerContext } from './components/SourceViewerContext'
 import { WarningBanner } from './components/WarningBanner'
+import { useTheme } from './engine/theme'
 import { buildMatcher } from './content/glossary'
 import { loadScenarios } from './content/loadScenarios'
 import { DEFAULT_PREFS, clearAvatarPrefs, loadAvatarPrefs, saveAvatarPrefs, type AvatarPrefs } from './engine/avatarPrefs'
@@ -43,6 +44,7 @@ export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { scenario, screen } = state
   const readAloud = useReadAloud()
+  const lightMode = useTheme()
   const [openSourceId, setOpenSourceId] = useState<string | null>(null)
   const [confirmHome, setConfirmHome] = useState(false)
   const [confirmStartOver, setConfirmStartOver] = useState(false)
@@ -228,15 +230,17 @@ export default function App() {
   const readAloudItems: MenuItem[] = readAloud.supported
     ? [{ id: 'read-aloud', label: 'Read aloud', glyph: '🔊', checked: enabled, onSelect: readAloud.toggle }]
     : []
+  const themeItem: MenuItem = { id: 'light-mode', label: 'Light mode', glyph: '☀', checked: lightMode.theme === 'light', onSelect: lightMode.toggle }
   const aboutItem: MenuItem = { id: 'about', label: 'About this game', glyph: 'ⓘ', onSelect: () => setAboutOpen(true) }
   const startOverItem: MenuItem = { id: 'start-over', label: 'Start over', glyph: '↺', danger: true, onSelect: () => setConfirmStartOver(true) }
   let menuItems: MenuItem[]
   if (stage === 'title' || !profile) {
-    menuItems = [...readAloudItems, aboutItem, ...(profile ? [startOverItem] : [])]
+    menuItems = [...readAloudItems, themeItem, aboutItem, ...(profile ? [startOverItem] : [])]
   } else if (stage === 'character') {
     menuItems = [
       { id: 'journey', label: scenario ? 'Back to your journey' : 'Choose an era', glyph: '✦', onSelect: () => setStage('game') },
       ...readAloudItems,
+      themeItem,
       aboutItem,
       startOverItem,
     ]
@@ -245,6 +249,7 @@ export default function App() {
       ...(scenario ? [{ id: 'home', label: 'Home: choose an era', glyph: '⌂', onSelect: () => setConfirmHome(true) }] : []),
       { id: 'character', label: 'My character', glyph: '♜', onSelect: () => setStage('character') },
       ...readAloudItems,
+      themeItem,
       aboutItem,
       startOverItem,
     ]
