@@ -10,7 +10,7 @@ interface Props {
   scenario: Scenario
   figureId: string
   nodeId: string
-  onChoice: (next: string) => void
+  onChoice: (next: string, text: string) => void
   onLeave: () => void
 }
 
@@ -55,7 +55,7 @@ export function Dialogue({ scenario, figureId, nodeId, onChoice, onLeave }: Prop
           <ul className="choice-list">
             {node.choices.map((c, i) => (
               <li key={i} className="stagger" style={{ '--i': i } as React.CSSProperties}>
-                <ChoiceButton text={c.text} label={`choice ${i + 1}`} onClick={() => onChoice(c.next)} />
+                <ChoiceButton text={c.text} label={`choice ${i + 1}`} onClick={() => onChoice(c.next, c.text)} />
               </li>
             ))}
           </ul>

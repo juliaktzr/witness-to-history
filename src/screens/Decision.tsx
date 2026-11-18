@@ -8,9 +8,10 @@ interface Props {
   scenario: Scenario
   onDecide: (outcomeId: string) => void
   onBack: () => void
+  onOpenJournal: () => void
 }
 
-export function Decision({ scenario, onDecide, onBack }: Props) {
+export function Decision({ scenario, onDecide, onBack, onOpenJournal }: Props) {
   const { decision } = scenario
   return (
     <Frame
@@ -27,6 +28,12 @@ export function Decision({ scenario, onDecide, onBack }: Props) {
         <p className="callout-label">What you know, and what you do not</p>
         <ContentText value={decision.context} label="decision context" terms />
       </div>
+      <p className="journal-reminder">
+        Not sure? Look back at what people told you and your notes.{' '}
+        <button type="button" className="btn btn-small" onClick={onOpenJournal}>
+          <span aria-hidden="true">📖</span> Open my journal
+        </button>
+      </p>
       <h2 className="section-heading">Pick one</h2>
       <ul className="choice-list decision-list">
         {decision.options.map((o, i) => (

@@ -6,10 +6,13 @@ import { ConfirmDialog } from './components/ConfirmDialog'
 import type { MenuItem } from './components/GameMenu'
 import { GlossaryContext } from './components/GlossaryContext'
 import { GlossaryDialog } from './components/GlossaryDialog'
+import { JournalDialog } from './components/JournalDialog'
+import { JourneyContext } from './components/JourneyContext'
 import { SourcePanel } from './components/SourcePanel'
 import { SourceViewerContext } from './components/SourceViewerContext'
 import { WarningBanner } from './components/WarningBanner'
 import { useTheme } from './engine/theme'
+import { clearAllNotes, loadNotes, saveNotes, type Notes } from './engine/notes'
 import { buildMatcher } from './content/glossary'
 import { loadScenarios } from './content/loadScenarios'
 import { DEFAULT_PREFS, clearAvatarPrefs, loadAvatarPrefs, saveAvatarPrefs, type AvatarPrefs } from './engine/avatarPrefs'
@@ -52,6 +55,11 @@ export default function App() {
   const [termId, setTermId] = useState<string | null>(null)
   const [avatarPrefs, setAvatarPrefs] = useState<AvatarPrefs>(loadAvatarPrefs)
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false)
+  const [journalOpen, setJournalOpen] = useState(false)
+  const [journalFigure, setJournalFigure] = useState<string | null>(null)
+  const [notes, setNotes] = useState<Notes>({})
+  // The "keep a journal" tip shows at the start of each era until the student opens the journal or taps Got it.
+  const [journalTipDone, setJournalTipDone] = useState(false)
   const [profile, setProfile] = useState<PlayerProfile | null>(loadProfile)
   const [stage, setStage] = useState<Stage>('title')
   const openSource = openSourceId ? scenario?.sources[openSourceId] : undefined
@@ -77,8 +85,24 @@ export default function App() {
     setOpenSourceId(null)
     setTermId(null)
     setAvatarPickerOpen(false)
+    setJournalOpen(false)
+    clearAllNotes()
+    setNotes({})
     dispatch({ type: 'quit' })
     setStage('title')
+  }
+
+  function openJournal(figureId: string | null = null) {
+    setJournalTipDone(true)
+    setJournalFigure(figureId)
+    setJournalOpen(true)
+  }
+
+  function changeNote(figureId: string, text: string) {
+    if (!scenario) return
+    const next = { ...notes, [figureId]: text }
+    setNotes(next)
+    saveNotes(scenario.id, next)
   }
 
   // Record progress on the player card: people talked to, eras finished.
@@ -108,14 +132,17 @@ export default function App() {
   // Read a dialog (source record or question) when it opens; go back to silence when it closes.
   useEffect(() => {
     if (!enabled) return
-    if (openSourceId || termId || confirmHome || confirmStartOver || aboutOpen) speak(collectScreenText(document.querySelector('dialog[open]') ?? undefined))
+    if (openSourceId || termId || confirmHome || confirmStartOver || aboutOpen || journalOpen) speak(collectScreenText(document.querySelector('dialog[open]') ?? undefined))
     else stop()
-  }, [enabled, openSourceId, termId, confirmHome, confirmStartOver, aboutOpen, speak, stop])
+  }, [enabled, openSourceId, termId, confirmHome, confirmStartOver, aboutOpen, journalOpen, speak, stop])
 
   // Leaving or switching the scenario closes any open panel.
   useEffect(() => {
     setOpenSourceId(null)
     setTermId(null)
+    setJournalOpen(false)
+    setJournalTipDone(false)
+    setNotes(scenario ? loadNotes(scenario.id) : {})
   }, [scenario])
 
   const warnings = scenario
@@ -191,7 +218,7 @@ export default function App() {
             scenario={scenario}
             figureId={screen.figureId}
             nodeId={screen.nodeId}
-            onChoice={(next) => dispatch({ type: 'dialogue-choice', next })}
+            onChoice={(next, text) => dispatch({ type: 'dialogue-choice', next, text })}
             onLeave={() => dispatch({ type: 'leave-dialogue' })}
           />
         )
@@ -202,6 +229,7 @@ export default function App() {
             scenario={scenario}
             onDecide={(outcomeId) => dispatch({ type: 'decide', outcomeId })}
             onBack={() => dispatch({ type: 'back-to-hub' })}
+            onOpenJournal={() => openJournal()}
           />
         )
         break
@@ -239,6 +267,7 @@ export default function App() {
   } else if (stage === 'character') {
     menuItems = [
       { id: 'journey', label: scenario ? 'Back to your journey' : 'Choose an era', glyph: '✦', onSelect: () => setStage('game') },
+      ...(scenario ? [{ id: 'journal', label: 'My journal', glyph: '📖', onSelect: () => openJournal() }] : []),
       ...readAloudItems,
       themeItem,
       aboutItem,
@@ -258,6 +287,7 @@ export default function App() {
 
   return (
     <SourceViewerContext.Provider value={setOpenSourceId}>
+      <JourneyContext.Provider value={{ furthest: state.furthest, goTo: (step) => dispatch({ type: 'go-to-step', step }) }}>
       <GlossaryContext.Provider value={glossary}>
         {stage === 'game' && profile && (
           <AppHeader
@@ -267,6 +297,9 @@ export default function App() {
             menuIndicator={menuIndicator}
             // Mid-era, just open the wardrobe so the student does not lose their place.
             onOpenProfile={() => (scenario ? setAvatarPickerOpen(true) : setStage('character'))}
+            onOpenJournal={scenario && screen.kind !== 'era-select' ? () => openJournal() : undefined}
+            showJournalTip={!journalTipDone && !!scenario && screen.kind !== 'era-select'}
+            onDismissJournalTip={() => setJournalTipDone(true)}
           />
         )}
         {stage !== 'game' && menuItems.length > 0 && <FloatingMenu items={menuItems} indicator={menuIndicator} />}
@@ -309,8 +342,20 @@ export default function App() {
         )}
         <AboutDialog open={aboutOpen} scenario={scenario ?? null} onClose={() => setAboutOpen(false)} />
         <GlossaryDialog entry={openEntry} scenario={scenario ?? null} onClose={() => setTermId(null)} />
+        {scenario && (
+          <JournalDialog
+            open={journalOpen}
+            scenario={scenario}
+            figureId={journalFigure}
+            talkLog={state.talkLog}
+            notes={notes}
+            onChangeNote={changeNote}
+            onClose={() => setJournalOpen(false)}
+          />
+        )}
         <SourcePanel sourceId={openSourceId} source={openSource} onClose={() => setOpenSourceId(null)} />
         </GlossaryContext.Provider>
+      </JourneyContext.Provider>
     </SourceViewerContext.Provider>
   )
 }
